@@ -1,0 +1,196 @@
+Resumo da aula 14 (11/05/2022)
+
+
+Exercícios com cálculos iterativos, precisão de reais,
+constantes, biblioteca math.h, e breve introdução ao tipo "char"
+
+=========================
+Problema 31: Seja EPS=0.00001 (precisão)
+Dado um número real x >= 0, calcular uma aproximação da raiz
+quadrada de x através da seguinte sequência:
+
+    r(0) = x
+    r(i+1) = 1/2 (r(i)+ x/r(i))
+    
+Exemplos:
+Para x = 3, r0 = 3, r1 = 2, r2 = 1.75, r3 = 1.732143, r4 = 1.732051
+Para x = 4, r0 = 4, r1 = 2.5, r2 = 2.05, r3 = 2.000610, r4 = 2.000000
+Para x = 5, r0 = 5, r1 = 3, r2 = 2.33, r3 = 2.238095, r4 = 2.236068
+Para x=0.81, r0 =0.81, r1 =0.905, r2 =0.9000138122, r3 =0.9000000001
+A aproximação será o primeiro valor r(i+1) tal que |r(i+1)-r(i)| < EPS.
+
+#include <stdio.h>
+
+#define EPS 0.00001
+
+/* função para verificar se o número é igual a zero */
+/* Iremos considerar que qualquer valor < EPS é desprezado pois
+   está abaixo da precisão de interesse */
+int is_zero(double x) {
+  if ((x < EPS) && (-EPS < x))
+    return 1 ;
+  return 0 ;
+}
+
+/* função que calcula o valor absoluto de um número */
+double vabsoluto(double x) {
+  if (x < 0)
+    x = -x ;
+  return x ;
+}
+
+int main() {
+  double  x ;
+  double  rant, rprox;
+
+  printf("Digite um real positivo: ") ;
+  scanf("%lf", &x) ;
+
+  if(is_zero(x)) {
+    printf("A raiz de %f é %f\n", 0.0, 0.0) ;
+    return 0 ;
+  }
+
+  rant = x;
+  rprox = 0.5*(rant + x/rant) ;
+
+  printf("rant=%f  rprox=%f   |rprox-rant|=%f\n",
+	 rant, rprox, vabsoluto(rprox - rant)) ;
+
+  while(vabsoluto(rprox - rant)>=EPS) {
+    rant = rprox ;
+    rprox = 0.5*(rant + x/rant) ;
+    printf("rant=%f  rprox=%f   |rprox-rant|=%f\n",
+	   rant, rprox, vabsoluto(rprox - rant)) ;
+  }
+
+  printf("A raiz de %f é %f\n", x, rprox) ;
+
+  return 0 ;
+}
+
+===> Altere o código acima para, em vez de se considerar
+uma precisão EPS fixa, ela seja um dado de entrada
+(precisão especificada pelo usuário).
+
+===> Use a função
+   double sqrt(double x);
+da biblioteca "math.h" do C, e compare o resultado obtido
+pelo programa acima e o obtido com a função "sqrt()"
+
+Para usar a biblioteca "math.h", é preciso incluir o cabeçalho
+
+    #include <math.h>
+
+Também é preciso dizer ao compilador que o código binário
+deve ser "linkado" com a biblioteca:
+
+    gcc -ansi -Wall -pedantic -o raiz  raiz.c  -lm
+
+Em "-lm", "m" refere-se à biblioteca "math"
+
+
+=========================
+Problema 32: Dado um número real x tal que 0 <= x <= 1, calcular
+uma aproximação do arco tangente de x (em radianos) através da série
+infinita:
+    arctan(x) = x - x^3/3 + x^5/5 - x^7/7 + . . .
+incluindo todos os termos da série até |x^k/k| < 0,0001 (excluir este último).
+
+#include <stdio.h>
+#include <math.h>
+
+#define EPS 0.00001
+
+int main() {
+  double x, arctan, num;
+  int den;
+
+  printf("Digite um angulo (em radianos): ") ;
+  scanf("%lf", &x) ;
+
+  arctan = 0 ;
+  num = x ;
+  den = 1 ;
+  
+  while(num/k>=EPS || num/k<=-EPS) {
+    arctan = arctan + num/k ;
+    k=k+2;
+    num = -num*x*x ;
+  }
+  
+  printf("Aproximação de arctan de %f = %f\n\n", x, arctan) ;
+
+  printf("(usando math.h)\nAproximação de arctan de %f = %f\n", x, atan(x)) ;
+
+  return 0;
+}
+
+
+    
+=========================
+Tipos
+
+   int
+   float / double
+   char
+
+O tipo char
+-----------
+É um tipo que ocupa 1 byte e é usado para armazenar
+caracteres (símbolos como letras, dígitos, sinais de
+pontuação e alguns caracteres de controle).
+Os números de 0 a 127 codificam os caracteres mais
+usuais da língua inglesa e a codificação é conhecida
+por ASCII (American Standard Code for Information Interchange).
+
+Existem várias codificações e muitas delas usam o ASCII
+como base, estendendo-o.
+
+O código a seguir mostra como ver qual é o caractere
+associado aos códigos de 32 a 126. Os números de 0 a 31
+são em sua maioria caracteres de controle e não representam
+caracteres visíveis.
+
+int main() {
+  char c ;
+
+  for(c=32; c<127; c++) {
+    printf("código=%d  caracter: %c\n", c, c);
+  }
+  return 0 ;
+}
+
+Como na prática o que é armazenado no computador são números
+(que nós interpretamos como um código que representa algum
+caractere), podemos aplicar operações aritméticas como
++ sobre variáveis do tipo "char"
+
+O código a seguir mostra como imprimir o código de um caractere
+e como usar a operação + com caracteres:
+
+int main() {
+  char c ;
+
+  printf("\n") ;
+  c = 'A' ;
+  printf("code of character 'A' is %d\n", c);
+
+  c = c+3;
+  printf("character with code 'A'+3 is %c\n", c);
+ 
+  return 0 ;
+}
+
+Apenas para complementar a discussão sobre tipos, o
+código abaixo é útil para verificar quantos bytes cada
+tipo ocupa:
+
+int main() {
+  printf("sizeof(char)=%d\n", (int)sizeof(char));
+  printf("sizeof(int)=%d\n", (int)sizeof(int));
+  printf("sizeof(float)=%d\n", (int)sizeof(float));
+  printf("sizeof(double)=%d\n", (int)sizeof(double));
+  return 0 ;
+}
+

@@ -1,0 +1,282 @@
+Resumo da aula 12 (04/05/2022)
+
+
+Revisão de funções
+
+================
+Problema 25: Dados dois números reais, x e y, e
+dois números inteiros não negativos, a e b, calcular
+o valor de
+    x^a + y^b + (x-y)^{a+b}
+
+Podemos ver imediatamente que a expressão acima
+envolve 3 potenciações. Assim, seria conveniente
+termos uma função que, dados um real x, e um inteiro
+não-negativo a, calcula x^a.
+
+double pot(double x, int a) {
+    double res ;
+    int i ;
+    
+    res = 1.0 ;
+    for(i=1; i<=a; i++) {
+    	res = res*x ;
+    }
+    return res ;
+}
+
+Agora podemos usar essa função pot() e resolver
+o problema.
+
+int main() {
+    double x, y, res ;
+    int a, b ;
+
+    printf("Digite x, y, a e b: ");
+    scanf("%lf %lf %d %d", &x, &y, &a, &b) ;
+
+    res = pot(x, a) + pot(y, b) + pot(x-y, a+b) ;
+    print("Resultado = %f\n", res) ;
+    return 0 ;
+}
+
+De fato a biblioteca math.h inclui funções para
+potenciação:
+
+       #include <math.h>
+
+       double pow(double x, double y);
+       float powf(float x, float y);
+       long double powl(long double x, long double y);
+
+A diferença entre float, double, e long double
+é a quantidade de bits usada para armazenar um número
+real. float usa 32 bits e double usa 64 bits.
+long double, pela lógica usaria 128 bits (mas é bom
+consultar o manual). Porém mesmo que seja declarada
+uma variável do tipo long double, é possível que na
+prática o seu processador acabe usando menos bits
+simplesmente porque o software (por exemplo compilador)
+ou o hardware não estão preparados para lidar com
+essa quantidade de bits na representação de números
+reais.
+
+Hoje em dia deve ser seguro supor que praticamente
+todos os computadores estão preparados para 64 bits.
+Potanto podemos usar double.
+Nesta disciplina não iremos dar muita atenção a
+esses detalhes.
+
+Também por enquanto não usaremos funções das
+bibliotecas do C.
+
+
+Passagem de parâmetros na linguagem C
+-------------------------------------
+Na linguagem C, a passagem de parâmetros é por valor.
+Isto é, o valores passados como argumentos na chamada
+da função são copiados para os parâmetros.
+Em contraposição, algumas linguagens fazem passagem
+de parâmetros por referência. Isto é, possibilitam que
+a função faça acesso direto a uma variável fora de
+seu escopo. No caso da C, como a função só recebe
+valores, não há como fazer acesso direto a uma
+variável externa ao seu escopo.
+
+Há porém um mecanismo que permite acesso indireto a
+uma variável fora do escopo. Vamos usar um exemplo
+simples para explicar isso.
+
+================
+Problema 26: Escrever um programa que realiza a troca
+de valores entre duas variáveis inteiras. Em seguida,
+escrever uma função que realiza essa troca, e um
+programa que realiza a troca usando essa função.
+
+int main() {
+   int a, b ;
+   int tmp ;
+   
+   a = 3 ;
+   b = 8 ;
+
+   tmp = a ;
+   a = b ;
+   b = tmp ;
+
+   printf("a=%d b=%d\n", a, b) ;
+}
+
+----------------
+void tentar_troca(int a, int b) {
+   tmp = a ;
+   a = b ;
+   b = tmp ;
+}
+
+int main() {
+   int a, b ;
+   int tmp ;
+   
+   a = 3 ;
+   b = 8 ;
+
+   tentar_troca(a,b) ;
+
+   printf("a=%d b=%d\n", a, b) ;
+   return 0 ;
+}
+
+
+Simulação do exemplo acima
+--------------------------
+Podemos ver que os parâmetros a e b da função
+tentar_troca(a, b) recebem os valores das variáveis
+a e b da main(). Isto é, a chamada acima
+   tentar_troca(a, b) ;
+não seria diferente de
+   tentar_troca(3, 8) ;
+em que 3 é o valor de a e 8 é o valor de b na main()
+e são copiados respectivamente para a e b da função
+tentar_troca()
+
+A função tentar_troca() faz a troca de valores entre
+seus parâmetros a e b, mas esses processamentos não
+tem mais relação alguma com as variáveis a e b da
+main(). Ou seja, da forma que está, não há como a
+função tentar_troca() fazer acesso direto à
+variável a ou b da função main().
+
+Como podemos escrever uma função troca() que
+seja capaz de fazer a troca de valores entre as
+variáveis a e b da main() ?
+
+
+Endereços e ponteiros
+---------------------
+
+Toda variável de um programa, durante a execução
+do programa, está associada a uma posição na memória
+do computador.
+Por exemplo, seja o trecho
+
+    int a ;
+
+    a = 8 ;
+    a = a + 1;
+
+Na execução desse código, a variável "a" irá ocupar
+uma certa posição na memória do computador.
+Essa posição é fixa e não mudará ao longo da
+execução. Qualquer referência ao nome "a" estará
+fazendo referência a essa posição na memória.
+
+Se "a" está na posição 100 da memória, a instrução
+"a = 8" faz com que o número 8 seja copiado para
+a posição 100 da memória. Da mesma forma, na instrução
+"a = a + 1", primeiro o valor de "a" é consultado
+para que possa ser calculado "a+1" e em seguida
+o resultado desse cálculo é copiado para "a" (isto é,
+neste exemplo, para a posição 100 da memória).
+
+Se soubermos o endereço de uma variável, podemos
+então pensar em fazer acesso à variável mesmo
+sem saber o seu nome!
+
+Operador &
+----------
+Supondo
+     int   a ;
+a operação
+     &a
+corresponde ao endereço da variável "a".
+
+Operador *
+----------
+O operador *, aplicado a "um endereço", refere-se
+ao conteúdo naquele endereço.
+
+Assim
+        *(&a) = 5 ;
+é o mesmo que fazer
+        a = 5 ;
+
+Na linguagem C temos variáveis do tipo apontadores.
+
+     int a ;  /* variável int normal */
+     int *p ; /* variável apontador para int */
+
+     a = 5 ;
+     p = &a ;
+     
+     printf("valor de p = %p\n", (void *)p) ;
+     printf("valor de *p = %d\n", *p) ;
+     printf("valor de a = %d\n", a) ;
+
+Experimente executar o código acima e entender
+o que está acontecendo.
+A variável "p", que é do tipo apontador, recebe
+"&a", o endereço de "a". Já "*p" é o valor que
+está em tal endereço. Mais especificamente,
+"*p" é igual a "*(&a)" que é igual ao próprio "a".
+
+Veja que uma variável do tipo apontador pode ser
+associado a dois valores: o valor dela em si
+("p") que é INTERPRETADO como endereço e o valor
+apontado por ela ("*p") que é o valor que se
+encontra no endereço que está em "p".
+
+
+Voltando ao TROCA
+-----------------
+Por meio dos endereços podemos fazer acesso
+a variáveis que estão em outro escopo. Esse
+é o mecanismo a ser usado na construção da
+função troca() que irá alterar valores de
+variáveis declaradas na função main()
+
+void troca(int *a, int *b) {
+    int tmp ;
+
+    tmp = *a ;
+    *a = *b ;
+    *b = tmp ;
+}
+
+int main() {
+   int a, b ;
+   int tmp ;
+   
+   a = 3 ;
+   b = 8 ;
+
+   troca(&a, &b) ;
+
+   printf("a=%d b=%d\n", a, b) ;
+   return 0 ;
+}
+
+Comparando com a tentativa frustrada lé em cima,
+agora fizemos algumas alterações importantes.
+Os parâmetros da função troca() agora são
+apontadores. Além disso, na chamada da função
+troca(), passamos os endereços das variáveis
+"a" e "b" (da main()) e não os valores dessas
+variáveis.
+
+Como a função troca sabe os endereços, que estão
+nos apontadores, ela consegue indiretamente
+(via endereço e não nome) fazer acesso aos
+conteúdos das variáveis "a" e "b" da main().
+
+O que vai ser impresso pelo printf?
+
+
+-------------------------------------------
+Se você entendeu o conceito de endereçamento e
+apontadores da linguagem C, você já deve ser
+capaz de explicar por que desde o primeiro dia
+de aula usamos & no comando scanf:
+
+     scanf("%d", &n) ;
+

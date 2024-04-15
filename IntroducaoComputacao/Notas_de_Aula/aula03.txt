@@ -1,0 +1,268 @@
+Resumo da aula 03 (28/03)
+
+=================
+Problema 5: Dado um ponto p = (x, y) no plano real, verificar em qual
+quadrante ele se encontra. A entrada do seu programa são os valores de
+x e y e a saída é o nome do quadrante, de acordo com o esquema abaixo.
+Por conveniência, suponha que x != 0 e y != 0.
+( "!=" significa "diferente de" )
+
+                |
+	   NO   |   NE
+                |
+        --------+--------
+                |
+	   SO   |   SE
+                |
+
+Abaixo estão algumas soluções feitas por vocês.
+Algumas são mais diretas e limpas, outras não tão
+diretas, ou até com verificações redundantes.
+
+
+Solução 1
+---------
+
+x <- ler um número
+y <- ler um número
+Se x>0 e y>0
+	imprimir "NE"
+Senão se x<0 e y>0
+	imprimir "NO"
+      Senão se x<0 e y<0
+      	      imprimir "SO"
+	    Senão se x>0 e y<0
+		    imprimir "SE"
+
+Comentário: Há comparações redundantes
+  No segundo "se", "se y>0", x necessariamente
+  deve ser negativo já que o caso "x>0 e y>0"
+  já foi coberto no primeiro "se"
+  No terceiro "se", y necessariamente
+  será negativo, uma vez que os casos
+  em que "y>0" já foram cobertos nos dois
+  "se" anteriores.
+
+A estruturação dos encadeamentos de "se" e "senão"
+estão, talvez, um tanto confusos. Então, abaixo
+está a solução 1 novamente, usando desta vez outra
+indentação (mas mantendo as comparações reduntantes.
+Compare com a solução 2)
+
+x <- ler um número
+y <- ler um número
+Se x>0 e y>0
+   imprimir "NE"
+Senão
+   se x<0 e y>0
+       imprimir "NO"
+   Senão
+       se x<0 e y<0
+      	  imprimir "SO"
+       Senão
+          se x>0 e y<0
+	     imprimir "SE"
+
+Solução 2
+---------
+x <- ler um número
+y <- ler um número
+Se (x > 0 e y > 0)
+    imprimir "NE"
+Senão
+    Se (y > 0)
+        imprimir "NO"
+    Senão
+        Se (x < 0)
+	    imprimir "SO"
+        Senão
+            imprimir "SE"
+
+Comentário: Note a semelhança entre a solução
+1 e 2 em termos de encadeamento do "se" e "senão".
+A solução 2 não tem redundância (se removermos
+alguma comparação, a resposta ficará errada).
+É possível, porém, organizar a lógica de forma a
+reduzir o total de comparações até se chegar a
+uma resposta (veja solução 3 a seguir)
+
+
+Solução 3
+---------
+x <- ler o valor x
+y <- ler o valor y
+
+se x > 0:
+    se y > 0:
+	imprimir "NE"
+    senão:
+	imprimir "SE"
+senão:
+    se y > 0:
+	imprimir "NO"
+    senão:
+	imprimir "SO"
+
+Comentário: compare as soluções 2 e 3
+   Na solução 3, não importa o quadrante
+   em que se encontra o ponto, apenas
+   duas comparações são suficientes para
+   se chegar à resposta.
+   Quantas comparações, no pior caso, serão
+   realizadas na solução 2 ?
+
+
+Outras soluções, não discutidas em sala de aula
+
+Solução 4
+---------
+quadrante <- "AB"
+abscissa  <- ler um n°
+ordenada  <- ler um n°
+se ordenada > 0
+    quadrante <- "N"
+senão 
+    quadrante <- "S"
+se abscissa > 0 
+    quadrante <- quadrante + "E"
+senão
+    quadrante <- quadrante + "O"
+imprimir quadrante
+
+Comentário: algumas questões podem ser levantadas
+   neste caso: (1) o que significa "soma" de duas letras ?
+   (2) qual o propósito da primeira linha 'quadrante <- "AB"' ?
+   No mais, supondo que "N"+"E" é igual a "NE" e assim por
+   diante para as outras "adições de letras", a lógica
+   está ok
+   
+Solução 5
+---------
+ler x
+ler y
+
+se x > 0	
+    se y > 0
+        imprimir "NE"	
+    se y < 0
+	imprimir "SE"
+senão se x < 0
+    se y > 0
+	imprimir "NO"	
+    se y < 0
+        imprimir "SO"
+
+Comentários: Dentro dos dois blocos principais,
+   os associados a "se x>0" e "senão se x<0",
+   temos "se y>0" seguido de "se y<0" -- aqui
+   claramente deveria ser
+          se y>0
+	      imprimir "NE"
+	  senão
+	      imprimit "SE"
+   Da forma que está, mesmo quando "y>0", logo em
+   seguida será verificado se "y<0" (o que não faz
+   sentido, pois é uma verificação desnecessária)
+   Além disso, "se x>0" é falso, então só podemos
+   ter "x<0" (já que estamos supondo x!=0).
+   Logo, a comparação "se x<0" é também desnecessária.
+
+
+Comentários gerais, a partir de soluções examinadas
+---------------------------------------------------
+
+1. Prestar atenção para evitar comparações desnecessárias
+2. Uso de dois "se", um em seguida ao outro, pode fazer
+   sentido em alguns casos, mas em situações em
+   que queremos tratar casos com condições complementares,
+   devemos usar "se/senão"
+3. Inicializações são importantes, mas procure
+   usar valores que não pareçam arbitrárias.
+4. Nome de variável deve, na medida do possível,
+   estar associado à semântica do elemento sendo
+   armazenado nela.
+
+Se/senão pode ser pensado como uma árvore de decisão!
+
+
+=================
+Problema 6: Dada uma sequência de números inteiros não
+    nulos, terminada com o número 0, calcular a soma de
+    todos os números da sequência que antecedem o 0. 
+    (note que sequência aqui refere-se simplesmente
+    a um número depois de outro, sem nenhuma organização
+    específica como "estar em ordem crescente")
+
+Exemplos:
+
+3 1 2 0
+Neste caso, a soma é 6
+
+325 0
+Neste caso a soma é 325
+
+0
+Neste caso a soma é 0
+
+1 3 5 7 9 0
+Neste caso, a soma é 25
+
+13 2 4 61 13 1 1 9 6 0
+Neste caso a soma é __
+
+Solução
+--------
+soma <-- 0
+num <-- ler um número
+enquanto num != 0
+    soma <-- soma + num
+    num <-- ler um número
+imprimir soma
+
+
+Comentário: "enquanto" define uma estrutura
+de repetição. "enquanto num>0" significa que
+enquanto a condição "num>0" for verdadeira,
+o bloco de instruções do laço
+    soma <-- soma + num
+    num <-- ler um número
+será executado repetidamente.
+Em geral, a estrutura de repetição é construída
+de tal forma a garantir que a condição ficará
+negativa em algum momento. O que aconteceria com
+a execução do laço, se removermos a instrução
+    num <-- ler um número
+?
+
+
+=================
+Problema 7: Dado um inteiro positivo n e uma
+sequência com n números inteiros, calcular a soma
+dos n números na sequência
+
+Exemplos
+
+3 9 1 -2
+A soma é 8
+
+1 -6
+A soma é -6
+
+2 0 0
+A soma é zero
+
+soma <-- 0
+n <-- ler um número
+cont <-- 0
+enquanto cont<n
+    num <-- ler um número
+    soma <-- soma + num
+    cont <-- cont + 1
+imprimir soma
+
+
+Comentário: o programa acima funciona se n é
+  zero ? O que acontece se eu trocar a condição
+  "cont < n" no comando "enquanto" por
+  "cont <= n" ?
+

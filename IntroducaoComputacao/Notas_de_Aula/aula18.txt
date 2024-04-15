@@ -1,0 +1,125 @@
+Resumo da aula 18 (25/05/2022)
+
+
+===================================
+Problema 38: Dado um inteiro positivo n e uma sequência
+com n números inteiros, imprimir a sequência eliminando
+as repetições.
+
+Por exemplo, para a seguinte entrada com 8 números
+
+      9   1   1   -2    3   9   1   2
+
+a saída deverá ser
+
+      9   1   -2   3    2
+
+
+Solução  (só armazena os distintos)
+-----------------------------------
+
+#define MAX 256
+
+int main() {
+    int i, j, n, distintos, num ;
+    int V[MAX] ;
+    int achou = 0 ;
+
+    printf("Digite n (n<=256): ") ;
+    scanf("%d", &n) ;
+    distintos = 0;
+    
+    for(i=0;i<n;i++) {
+        scanf("%d", &num) ;
+	achou=0;
+	j=0;
+	while(j<distintos && !achou) {
+	    if(V[j]==num) achou=1;
+	    j++;
+	}
+	if(!achou) {
+	    V[distintos] = num ;
+	    distintos++ ;
+	}
+    }
+    for(i=0;i<distintos; i++) {
+        printf("%d ", V[i]);
+    }
+    printf("\n") ;
+    return 0 ;
+}
+
+
+Solução usando funções para leitura e impressão de seq.
+e também para eliminar repetidos
+(armazena todos e depois elimina repetições)
+-------------------------------------------------------
+(na prática não precisamos usar funções para leitura e
+impressão; elas estão aqui para ilustrar passagem de vetores
+para os parâmetros das funções)
+A função para eliminar repetições pode ser útil, porém.
+
+#define MAX 256
+
+/* le n inteiros e armazena no vetor V. Assume que n <= MAX */
+void le_vetor(int V[MAX], int n)
+{
+  int i ;
+
+  for(i=0; i<n; i++) {
+    scanf("%d ", &V[i]) ;
+  }
+}
+
+
+/* imprime os n primeiros elementos do vetor V */
+void imp_vetor(int V[MAX], int n)
+{
+  int i ;
+
+  for(i=0; i<n; i++) {
+      printf("%d ", V[i]) ;
+  }
+  printf("\n");
+}
+
+
+/* recebe um vetor V com n elementos e elimina
+   repetições. Devolve o novo tamanho do vetor */
+   
+int elimina_reticoes(int V[MAX], int n) {
+    int i, j, distintos, achou ;
+
+    distintos = 1 ;
+    for(i=1; i<n; i++) {
+	achou=0;
+	j=0;
+	while(j<distintos && !achou) {
+	    if(V[j]==V[i]) achou=1;
+	    j++;
+	}
+	if(!achou) {
+	    V[distintos] = V[i] ;
+	    distintos++ ;
+	}
+    }
+    return distintos ;
+}
+
+int main() {
+    int n ;
+    int V[MAX] ;
+
+    printf("Digite n (n<=256): ") ;
+    scanf("%d", &n) ;
+
+    le_vetor(V, n) ;
+
+    distintos = elimina_repeticoes(V, n) ;
+
+    imp_vetor(V, distintos) ;
+    
+    return 0 ;
+}
+
+

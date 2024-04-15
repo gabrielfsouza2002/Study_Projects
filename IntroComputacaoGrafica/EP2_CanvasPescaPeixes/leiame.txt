@@ -1,0 +1,17 @@
+EP2 de MAC 420/5744 - Pescaria
+
+Introdução:
+Este projeto é o resultado do EP2 da disciplina MAC 420/5744, onde desenvolvemos um jogo de pescaria interativo em HTML, CSS e JavaScript. No jogo, o jogador assume o papel de um pescador que utiliza um arpão para capturar peixes que nadam pelo ambiente aquático representado na tela.
+O objetivo principal do jogo é capturar o maior número possível de peixes dentro de um limite de tempo determinado, acumulando pontos a cada peixe capturado. Os peixes se movem aleatoriamente pelo ambiente, proporcionando um desafio dinâmico para o jogador.
+Através deste projeto, exploramos conceitos de animação, detecção de colisões, interação do usuário e manipulação de elementos HTML5 com JavaScript. Ao longo do desenvolvimento, enfrentamos desafios que exigiram criatividade e habilidade técnica para superar, resultando em um jogo final que esperamos que os jogadores apreciem e desfrutem.
+
+Horas de trabalho:
+Aproximadamente:
+- 4 horas por semana
+- Total:  20 horas
+
+Dificuldades:
+Durante o desenvolvimento, uma das principais dificuldades encontradas foi relacionada ao redimensionamento da página junto com o canvas. Os objetos não foram redimensionados corretamente junto com o canvas, resultando em problemas de posicionamento quando a janela era redimensionada. Além disso, houve dificuldades na implementação da lógica de movimento dos objetos e detecção de colisões.
+
+Bugs:
+O problema encontrado no código está relacionado ao redimensionamento da página com o canvas. Os objetos não são redimensionados corretamente junto com o canvas, e quando a janela é redimensionada, os objetos não permanecem nas coordenadas redimensionadas.

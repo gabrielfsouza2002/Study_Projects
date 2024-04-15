@@ -1,0 +1,228 @@
+Resumo da aula 04 (30/03)
+-------------------------
+
+Hoje vamos introduzir a linguagem C.
+Veremos também como compilar e executar os programas.
+
+Programa escrito em linguagem C
+-------------------------------
+Em um primeiro momento, convém simplesmente
+aceitar certas coisas sem tentar entender tudo.
+
+Vamos escrever inicialmente a solução do Problema 1
+(visto na aula 02 e reproduzido abaixo)
+
+~~~~~~~~~~~~~~~~
+Problema 1: Dados dois números quaisquer, calcular
+a soma deles.
+
+     a <-- ler um número
+     b <-- ler um número
+     soma <-- a + b
+     imprimir soma
+~~~~~~~~~~~~~~~~
+
+===> O programa em linguagem C
+
+  #include <stdio.h>
+
+  int main() {
+    int a ;
+    int b ;
+    int soma ;
+
+    scanf("%d", &a) ;
+    scanf("%d", &b) ;
+    soma = a + b ;
+    printf("%d", soma);
+  
+    return 0 ;
+  }
+
+===> para compilar
+  gcc -ansi -Wall prob1.c -o prob1
+
+===> para executar
+  ./prob1
+
+  ./ indica o diretório (pasta) corrente
+     O sistema linux buscará um arquivo executável
+     com nome "prob1" na pasta corrente 
+
+===> Vamos melhorar o código
+  Ao executar, ficamos no escuro.
+  Vamos digitar dois números, um de cada vez (cada
+  um seguido por um ENTER), só para ver o que acontece.
+
+  Para não ficarmos no escuro, vamos adicionar mais
+  algumas linhas de código:
+
+  #include <stdio.h>
+
+  int main() {
+    int a ;
+    int b ;
+    int soma ;
+
+    printf("Digite o primeiro número: ") ;
+    scanf("%d", &a) ;
+    printf("Digite o segundo número: ") ;
+    scanf("%d", &b) ;
+    
+    soma = a + b ;
+    printf("A soma de %d e %d é igual a %d", a, b, soma);
+  
+    return 0 ;
+  }
+
+Comentários:
+  Vale a pena colocar "\n" (muda linha" no último printf.
+  Assim teremos:
+  
+      printf("A soma de %d e %d é igual a %d\n", a, b, soma);
+
+  (??) Experimente digitar qualquer coisa diferente de número.
+  
+======================
+Um segundo exemplo
+Vamos ver o código dos quadrantes em C
+
+~~~~~~~~~~~~~~~~~~~~
+x <- ler o valor x
+y <- ler o valor y
+
+se x > 0:
+    se y > 0:
+	imprimir "NE"
+    senão:
+	imprimir "SE"
+senão:
+    se y > 0:
+	imprimir "NO"
+    senão:
+	imprimir "SO"
+~~~~~~~~~~~~~~~~~~~~
+
+Em C:
+
+#include <stdio.h>
+
+int main() {
+  float x ;
+  float y ;
+
+  printf("Digite o valor de x: ") ;
+  scanf("%f", &x) ;
+  printf("Digite o valor de y: ") ;
+  scanf("%f", &y) ;
+
+  printf("O ponto está no quadrante ");
+  if (x>0) {
+    if (y>0) {
+      printf("NE\n") ;
+    }
+    else {
+      printf("SE\n") ;
+    }
+  }
+  else {
+    if (y>0) {
+      printf("N0\n") ;
+    }
+    else {
+      printf("S0\n") ;
+    }
+  }
+  return 0 ;
+}
+
+
+
+==========================
+Terceiro: Problema 7  (esse não vimos em sala)
+
+~~~~~~~~~~~~~~~~~~~~
+soma <-- 0
+n <-- ler um número
+cont <-- 0
+enquanto cont<n
+    num <-- ler um número
+    soma <-- soma + num
+    cont <-- cont + 1
+imprimir soma
+~~~~~~~~~~~~~~~~~~~~~
+
+#include <stdio.h>
+
+int main() {
+  int soma ;
+  int n ;
+  int num ;
+  int cont ;
+  
+  soma = 0 ;
+  printf("Qual é a quantidade de números na sequência? ") ;
+  scanf("%d", &n) ;
+  cont = 0 ; /* nenhum número da sequência foi lido ainda */
+
+  while (cont < n) {
+    printf("%d-ésimo número: ") ;
+    scanf("%d", &num) ;
+    soma = soma + num ;
+    cont = cont + 1 ;
+  }
+  printf("A soma é igual a %d\n", soma) ;
+
+  return 0 ;
+}
+
+OOOPS! Deu erro de compilação
+
+prob7.c: In function ‘main’:
+prob7.c:15:14: warning: format ‘%d’ expects a matching ‘int’ argument [-Wformat=]
+     printf("%d-ésimo número: ") ;
+             ~^
+	     
+Precisamos trocar a linha 15:
+    printf("%d-ésimo número: ") ;
+por
+    printf("%d-ésimo número: ", cont+1) ;
+
+
+(??) por que "cont+1" ??
+
+
+--------------------------------------------
+- Vimos alguns exemplos de programs simples escritos em C.
+- Vimos compilação e execução.
+- Vimos que colocar mensagens ajuda o usuário
+  (mas note que nem sempre isso faz sentido,
+  principalmente quando os dados não são fornecidos
+  pelo usuário.)
+- "\n" ajuda para fazer a saída não cluttered
+- vimos erro de compilação. Todo erro de compilação
+  (basicamente de sintaxe) precisa ser corrigido
+  para que a compilação ocorra sem erro.
+
+
+Linguagem C exige declaração de variáveis (nem todas
+as linguagens requerem). As variáveis são tipadas
+(só aceitam dados de um determinado tipo).
+
+
+Iremos decifrar mais para a frente o
+
+   - #include<stdio.h>
+   - int main() { }
+   - scanf()
+   - printf()
+   - return(0)
+   - & usado no scanf  
+
+
+=================
+Problema 8: Dado um inteiro não-negativo n, calcular
+o fatorial de n.
+
+(lição de casa; resolvemos na próxima aula)
+

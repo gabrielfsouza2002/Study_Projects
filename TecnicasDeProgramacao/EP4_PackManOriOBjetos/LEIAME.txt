@@ -1,0 +1,14 @@
+AUTOR:
+Gabriel Ferreira de Souza Araujo, nusp: 127018100, email: gabrielfsouza.araujo@usp.br
+
+DESCRIÇÃO:
+Esse programa faz uma simulação do jogo Pacman. Contém uma blbioteca estática que possui todas as classes e funções criadas para o funcionamento do programa. 
+
+COMO EXECUTAR:
+No diretório da pasta, abra o terminal e digite make. Com isso, surgirá um executável ep4. Por fim, para executar o jogo basta digitar o seguinte comando: ./ep4 <"arquivo.txt"> <linhas do arquivo> <colunas do arquivo>
+
+TESTES:
+Não foram realizados testes com o a ferramenta google teste, entretando, o programa foi testado manualmente durante a execução do jogo, buscando sempre achar bugs potenciais. Nos testes manuais, nenhum comportamento inesperado foi encontrado.
+
+DEPENDÊNCIAS:
+Os programas deverão ser executados no linux. Para executar o programa em C++, devemos instalar o G++ com o comando sudo apt install g++. Para garantir a execução do arquivo make, instale o make com o comando sudo apt instal make.

@@ -1,0 +1,19 @@
+AUTOR:
+Gabriel Ferreira de Souza Araujo, nusp: 127018100, email: gabrielfsouza.araujo@usp.br
+
+
+DESCRIÇÃO:
+O script envia para um bot no telegram as seguintes informações: Data e hora atual, IPs conectados no servidor criado no netstat, ociosidade da CPU(%) e o estado atual do servidor. Além disso, é passado para um parâmetro o diretório de um arquivo que irá conter todas essas informações que também são imprimidas no terminal.
+
+
+COMO EXECUTAR:
+No terminal do bash, será necessário dar permissão ao escript com o comando chmod u+x ep2 , depois executar o script com o ./ atribuindo, respectivamente, os seguintes parâmetros: diretório de um arquivo, limite de ociosidade(%), token do bot e ID do bot. Para que o seu servidor esteja ligado é necessário executar em um terminal o comando nc -k -l -p 45052 , e depois o comando nc <ip> 45052 em outro terminal.
+
+
+TESTES:
+./ep2 2 saves 99.0 5697373172:AAG7R1o2AzdVeDAIRWlawIJE831zURyTGi4 1764254155
+./ep2 2 saves 90.0 5697373172:AAG7R1o2AzdVeDAIRWlawIJE831zURyTGi4 1764254155
+
+
+DEPENDÊNCIAS:
+Os programas deverão ser executados no linux. No caso do Linux Ubunto, todos os pacotes utilizados ja estão instalados.

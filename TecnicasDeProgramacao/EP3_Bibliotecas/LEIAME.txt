@@ -1,0 +1,14 @@
+AUTOR:
+Gabriel Ferreira de Souza Araujo, nusp: 127018100, email: gabrielfsouza.araujo@usp.br
+
+DESCRIÇÃO:
+O programa contém duas bibliotecas, umas dinâmica e outra estática. A biblioteca estatica é o conjunto de funções que verificam diversas propriedades matemáticas descristas no arquivo.h. A biblioteca dinâmica tem uma função que gera um vetor aleatório. No programa teste, iremos importar essas bibliotecas e testar o funcionamento das funções de propriedades numéricas por meio de um vetor aleatorio gerado. Também, é feita uma documentação em doxygen e a compilação dos arquivos por meio do bash script compila.sh.
+
+COMO EXECUTAR:
+Execute o programa em bash script compila.sh:./compila.sh . O script pode receber uma entreda que permite desligar a função assert, digitando o seguinte comando: ./compila.sh desliga_assert. Caso o usuário não digite nenhum parametro a função assert será ligada.
+
+TESTES:
+O arquivo testa.c verifica se as funções da biblioteca propriedades numéricas estão com o comportamento esperado por meio de um vetor aleatório gerado pela biblioteca VetorAleatorio. Caso alguma das funções contenham algum erro, o programa ira reportar o erro por meio da função assert para o usuário ao compilar o programa, caso contrário, irá imprimir "Todas as funções foram testadas e estão funcionando corretamente! OBS: Vale apenas para assert habilitado".
+
+DEPENDÊNCIAS:
+Os programas deverão ser executados no linux. Para executar o programa em C, devemos instalar o GCC com o comando sudo apt install gcc. Para garantir a execução do arquivo compila.sh, digite o comando "chmod 777 compila.sh".

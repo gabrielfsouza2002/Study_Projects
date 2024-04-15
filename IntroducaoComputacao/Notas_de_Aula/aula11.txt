@@ -1,0 +1,157 @@
+Resumo da aula 11 (02/05)
+-------------------------
+
+==> No problema 16 vimos como calcular o mdc entre 2 números.
+==> No problema 19 vimos como calcular o mdc entre n números.
+
+Do ponto de vista de lógica do problema, podemos abstrair
+a solução do problema 19 para um nível mais elevado se
+pensarmos da seguinte forma:
+
+     n = ler n
+     m = ler o primeiro número da sequência
+           (se n==1, então esse número é o mdc da sequência)
+	   
+     para cada um dos n-1 números restantes
+         num = ler o próximo número
+	 m = mdc entre m e num
+	 
+     imprimir m
+
+
+Da mesma forma que "ler" é um comando misterioso por enquanto,
+podemos supor a existência de um comando mdc() que seria usado
+da seguinte forma:
+
+/* printf() antes de scanf() omitidos visando concisão */
+int main() {
+    int n, i, m, num ; 
+
+    /* leitura de n */
+    scanf("%d", &n);
+
+    /* leitura do primeiro elemento da sequência */
+    /* se a sequência tiver apenas um elemento, esse será o MDC */
+    scanf("%d", &m);
+
+    /* leitura e processamento do restante da sequência */
+    for (i = 1; i < n; i++) {
+        scanf("%d", &num);
+        m = mdc(m, num) ;
+    }
+    
+    printf("MDC = %d\n", mdc);
+    return 0;
+}
+
+O comando "mdc(m,num)" é um trecho de código específico
+para o cálculo do mdc entre dois números, escrito na
+forma de uma função, da seguinte forma:
+
+int mdc(int a, int b) {
+    int resto ;
+    
+    do {
+       resto = a % b ;
+       a = b ;
+       b = resto ;
+    }
+    while (resto != 0) ;
+    
+    return a ;
+}
+
+"int mdc(int a, int b) ;"  é o protótipo da função e
+deve ser declarado antes de sua chamada. Tipicamente
+colocamos eles antes do  "int main()".
+
+Já o que está acima é a definição da função. Além do
+protótipo, inclui o corpo. De forma similar ao main(),
+podemos ter variáveis locais ("resto") e um "return"
+ao final. As variáveis "int a, int b" são parâmetros
+da função "mdc" e funcionam de forma similar às
+variáveis locais. Enquanto no "main" colocamos "return 0"
+ao final, aqui colocamos "return a". "return a" faz com
+que o valor da variável "a" seja devolvido pela função
+àquele que a chamou.
+
+Os parâmetros são inicializados na chamada da função.
+
+
+===> Simulação da execução
+   Em caso de dúvidas, pergunte.
+   
+===> O que acontece na memória do computador
+   Memória RAM conterá:
+      - Código (sequência de instruções)
+      - stack (pilha de execução)
+   Uma chamada de função faz com que parâmetros, endereço para
+   retorno e variáveis locais à função sendo chamada sejam
+   "empilhadas" na pilha de execução. Ao término da execução
+   da função, essas coisas são desempilhadas e a execução
+   retorna ao ponto de chamada da função e continua dali.
+
+
+===> O que a seguinte função calcula?
+
+int func(int k) {
+    if (k<2) return 1;
+    else return k*func(k-1) ;
+}
+
+A função acima calcula o fatorial. Note que ela chama
+a si mesmo, configurando o que chamamos de função recursiva.
+Embora em algumas situações seja bem prática, não se
+deve abusar de chamadas recursivas (pois há o custo
+associado à chamda de funções, relacionada à mudança de
+escopo ou contexto de execução)
+
+=====================
+Problema 24:
+(a) Escreva uma função que recebe um inteiro n
+e devolve 1 se n é primo e devolve 0 caso contrário.
+(b) Escreva um programa que recebe um inteiro m e verifica
+se m pode ser escrito como p+q, com p e q primos. 
+Qual deve ser o protótipo da função ?
+
+int primo(int n) {
+    int eh_primo;
+    int div ;  
+
+    if (n == 1)
+        eh_primo = 0;
+    else
+        eh_primo = 1;
+    div = 2;
+
+    /* verifica se existe um divisor próprio de n */
+    while ((div*div<=n) and (eh_primo)) {
+        if (n%div==0)
+            eh_primo = 0;
+        div = div+1;
+    }
+    
+    /* devolve o resultado */
+    return eh_primo ;
+}
+
+int main() {
+    int m, p ;
+    int achou ;
+    
+    scanf("%d", &m) ;
+    achou = 0;
+    p = 2 ;
+    while ((p <= n/2) && (!achou)) {
+        if (primo(p) && primo(m-p)) {
+	    printf("%d = %d + %d\n", m, p, m-p) ;
+	    achou = 1;
+	}
+	p++ ;
+    }
+    if (!achou) {
+	printf("%d não pode ser escrito como soma de primos\n", m);
+    }
+    return 0;
+}
+

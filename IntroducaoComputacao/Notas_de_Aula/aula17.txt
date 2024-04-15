@@ -1,0 +1,229 @@
+Resumo da aula 17 (23/05/2022)
+
+
+Arrays (variáveis indexadas)
+-----------------------------
+
+Em muitas situações, não podemos resolver um problema
+seguindo a dinâmica que estivemos usando até este
+momento. Isto é, nos exercícios que viemos resolvendo
+até agora, usamos apenas uma quantidade pequena de
+variáveis, e mais ainda, quando tratamos entradas
+que são sequência de números, só resolvemos aqueles problemas
+nos quais lemos os números da sequência, um por um,
+e então "descartamos" depois de usá-los.
+
+No entanto, existem problemas nos quais precisamos
+ler uma sequência de números e não podemos nos dar
+ao luxo de descartar parte deles antes de terminar
+a leitura de todos eles.
+
+Exemplos:
+---------
+1) calcular a média e desvio padrão das notas da P1 de
+   MAC0110 da turma BCC 2022
+
+2) ordenar os números da sequência
+
+
+Em outras situações, como a do EP1, imagine como seria
+escrever o código para uma FORCA com números de uma
+dúzia de dígitos (!). 
+
+Para entender a situação vamos considerar o seguinte problema.
+
+===================================
+Problema 35: Dado um inteiro positivo n e uma sequência
+com n números que correspondem a lançamentos independentes
+de um dado, calcular a frequência relativa de cada uma
+das faces de 1 a 6.
+
+OBS: frequência relativa é simplesmente o número de
+ocorrências dividido por n
+
+Uma solução seria declarar uma variável contador para
+cada face:
+
+    int  c1, c2, c3, c4, c5, c6 ;
+    int  i, n, face ;
+    
+    c1 = c2 = c3 = c4 = c5 = c6 = 0 ;
+    scanf("%d", &n) ;
+    for (i=1; i<=n; i++) {
+        scanf("%d", &face) ;
+        if (face==1) c1++;
+	else if (face==2) c2++;
+	else if (face==3) c3++;
+	else if (face==4) c4++;
+	else if (face==5) c5++;
+	else c6++ ;
+    }
+    printf("A freq. relativa da face 1 é %f\n", (double)c1/n) ;
+    printf("A freq. relativa da face 2 é %f\n", (double)c2/n) ;
+    ...
+    printf("A freq. relativa da face 6 é %f\n", (double)c6/n) ;
+
+
+===================================
+Problema 35a: Suponha que em vez de dados, queiramos fazer
+a mesma coisa com uma roleta de 36 números. Desisto!
+
+===================================
+Problema 35b: Vamos repetir a solução do Problema 35 usando
+arrays (vetores, não de álegbra linear, porém).
+
+    int  cont[7] ;
+    int  i, n, face ;
+
+    for(face=1; face<=6; face++)
+        cont[face] = 0 ;
+	
+    scanf("%d", &n) ;
+    for (i=1; i<=n; i++) {
+        scanf("%d", &face) ;
+        cont[face] = cont[face] + 1 ;
+    }
+ 
+    for(face=1; face<=6; face++)
+       printf("A freq. relativa da face %d é %f\n", face, (double)cont[face]/n) ;
+    }
+
+
+O que  é  "int  cont[7];" na declaração de variáveis ?
+
+Trata-se de um "array" de int. No caso, são 7 posições sequenciais,
+sendo que cada posição pode armazenar um int.
+As posições são indexadas de 0 a 6, e os 7 ints podem ser referenciados por
+
+     cont[0]
+     cont[1]
+     ...
+     cont[6]
+
+(SIM, começa no índice zero)
+
+Cada elemento cont[i] funciona como uma variável do tipo int, da
+forma que já conhecemos. A vantagem de se usar array é que temos
+um nome para fazer referência à multiplas posições de memória;
+basta usarmos o nome e um índice.
+
+==========================
+Relação entre vetores e apontadores
+
+Quando declaramos um vetor
+
+    #define MAX 256
+    
+    int  V[MAX] ;
+
+na prática temos um apontador ( V é um apontador ).
+De fato,
+
+    *V     é a mesma coisa que V[0]
+    *(V+1) é a mesma coisa que V[1]
+    *(V+2) é a mesma coisa que V[2]
+    ...
+
+
+    &V[0] é a mesma coisa que  &(*V) = V
+    &V[1] é a mesma coisa que  &(*(V+1)) = V+1
+
+MAS, o + em V+1 é aritmética de ponteiros.
+V+1 é o endereço da posição seguinte à qual V
+está apontando. Como V aponta para V[0], V+1
+aponta para V[1] e assim por diante.
+
+
+===================================
+Problema 36: Dado um inteiro positivo n e uma sequência
+com n números inteiros, imprimir a sequência em ordem reversa.
+
+#define MAX 256
+
+int main() {
+    int  i, n ;
+    int  V[MAX] ;
+
+    printf("Digite n: ") ;
+    scanf("%d", &n) ;
+    if (n > MAX) {
+       printf("Sequência muito longa\n");
+       return 0;
+    }
+
+    printf("Digite os números da sequência: ");
+    for (i=0: i<n; i++) {
+        scanf("%d", &V[i]) ;
+    }
+    for (i=n-1; i>=0; i--) {
+        printf("%d", V[i]) ;
+    }
+    return 0 ;
+}
+
+
+===================================
+Problema 37: Dado um inteiro positivo n e uma sequência
+com n números reais entre 0 e 10.0, calcular a média
+aritmética e do desvio padrão dos números na sequência.
+
+Desvio padrão é a raiz quadrada da variância. A variância,
+por sua vez, é a soma dos quadrados da diferença
+(xi - media), i=1,2,...,n, dividido por n.
+
+#include <stdio.h>
+#include <math.h>
+
+#define MAX 256
+
+int main() {
+    int     i, n ;
+    double  V[MAX], soma, mean, var ;
+
+    printf("Digite n: ") ;
+    scanf("%d", &n) ;
+    if (n > MAX) {
+       printf("Sequência muito longa\n");
+       return 0;
+    }
+
+    soma = 0.0 ;
+    printf("Digite os números da sequência: ");
+    for (i=0: i<n; i++) {
+        scanf("%lf", &V[i]) ;
+	soma = soma + V[i] ;
+    }
+    mean = soma/n ;
+    var = 0.0 ;
+    for (i=0: i<n; i++) {
+        var = var + (V[i]-mean)*(V[i]-mean) ;
+    }
+    var = var/n ;
+    printf("Media = %f   std = %f\n", mean, sqrt(var) ) ;
+    return 0 ;
+}
+
+Nesta solução usamos a função sqrt() da biblioteca math.h
+
+Por conta disso, precisamos fazer o link com a biblioteca
+quando compilamos o programa:
+
+    gcc -ansi -Wall -pedantic -o prob37 prob37.c -lm
+
+-lm é para indicar justamente o link a ser feito.
+Caso contrário, na execução ocorrerá erro na
+chamada da função sqrt()
+
+
+===================================
+Problema 38: Dado um inteiro positivo n e uma sequência
+com n números inteiros, imprimir a sequência eliminando
+as repetições.
+
+Por exemplo, para a seguinte entrada com 8 números
+
+      9   1   1   -2    3   9   1   2
+
+a saída deverá ser
+
+      9   1   -2   3    2

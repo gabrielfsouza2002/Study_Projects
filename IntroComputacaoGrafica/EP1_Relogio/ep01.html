@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="Gabriel" content="EP01">
+    <title>EP1</title>
+    <link rel="stylesheet" href="ep01.css" /> <!-- carrega CSS -->
+    <script src="ep01.js" defer></script> <!-- carrega javascript -->
+</head>
+
+<body>
+
+
+    <center>
+        <h1>EP01 - MAC0420</h1>
+        <hr />
+        <div id="bloco1">
+            <h2 id="clock">Tempo: 00:00:00</h2>
+        </div>
+        
+        <div id="bloco2">
+            <table>
+                <tr>
+                    <td><button class='teclado' onclick="adicionarNumero(7)">7</button></td>
+                    <td><button class='teclado' onclick="adicionarNumero(8)">8</button></td>
+                    <td><button class='teclado' onclick="adicionarNumero(9)">9</button></td>
+                </tr>
+                <tr>
+                    <td><button class='teclado' onclick="adicionarNumero(4)">4</button></td>
+                    <td><button class='teclado' onclick="adicionarNumero(5)">5</button></td>
+                    <td><button class='teclado' onclick="adicionarNumero(6)">6</button></td>
+                </tr>
+                <tr>
+                    <td><button class='teclado' onclick="adicionarNumero(1)">1</button></td>
+                    <td><button class='teclado' onclick="adicionarNumero(2)">2</button></td>
+                    <td><button class='teclado' onclick="adicionarNumero(3)">3</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button class='teclado' onclick="adicionarNumero(0)">0</button></td>
+                    <td><button class='teclado' onclick="limparBloco1()">CL</button></td>
+                </tr>
+            </table>
+        </div>
+        <div id="bloco3">
+            <h2 id="clock2">00 : 00 : 00</h2>
+        </div>
+        <div id="bloco4">
+            <input class='teclado' id="btCronoTimer" type="button" size="15" value="Crono" onclick="alternarModo()" />
+            <input class='teclado' id="btStartStop" type="button" size="15" value="Start" onclick="startStop()" />
+            <input class='teclado' id="btPauseRun" type="button" size="15" value="Pause" onclick="pauseRun()" />
+        </div>
+    </center>
+</body>
+
+</html>

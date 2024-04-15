@@ -1,0 +1,147 @@
+Resumo da aula 08 (20/04)
+-------------------------
+
+LAÇOS em C : while, do-while, for
+
+Algumas abreviações:
+
+    n = n+1 ;   pode ser escrito  n++ ;
+    n = n-1 ;   pode ser escrito  n-- ;
+
+
+DO-WHILE
+========
+
+/* solução do mdc usando do-while */
+int main() {
+    int a, b, resto ;
+
+    printf("Digite a e b positivos: ");
+    scanf("%d %d", &a, &b) ;
+
+    do {
+         resto = a % b ;
+	 a = b ;
+	 b = resto ;
+    }
+    while (resto != 0) ;
+    
+    printf("O mdc é  %d\n", a) ;
+    return 0 ;
+}
+
+
+======================================
+Problema 17: EX4
+
+
+FOR
+===
+
+"for" é um outro comando em C para escrever laços
+O formato dele é, de forma geral:
+
+   for ( _inicialização_ ; _verificação_ ; _update_ )
+
+Por exemplo, se eu quero iterar n vezes, usando uma
+variável auxiliar cont, escrevo da seguinte forma
+
+
+   for (cont=0; cont<n; cont++) {
+       /* tudo que deve ser feito em cada
+          iteração, exceto a atualização do
+	  contador */
+   }
+
+cont++  é uma abreviatura para  cont = cont + 1
+
+Para entender como o for funciona, compare com o
+while que vocês já conhecem:
+
+   cont = 0 ;
+   while ( cont < n ) {
+       /* tudo que deve ser feito em cada
+          iteração, exceto a atualização do
+	  contador */
+	  
+       cont = cont + 1 ;
+   }
+       
+Tanto o for como o while acima fazem a mesma coisa!
+
+
+======================================
+Problema 20 (Em aula, esse veio depois):
+Dados um inteiro x e um inteiro não-negativo n, calcular
+x elevado a n.
+
+int main() {
+  int x, n, pot ;
+  int cont ;
+  
+  printf("Digite x e n (n>0): ");
+  scanf("%d %d", &x, &n) ;
+
+  pot = x ;
+  
+  for(cont=1; cont < n; cont++) {
+    pot = pot*x ;
+  }
+  
+  printf("O valor de %d elevado a %d é %d\n", x, n, pot) ;
+
+  return 0 ;
+}
+
+
+======================================
+Problema 18: Dados dois inteiros positivos m e n, determinar, entre
+todos os pares de números inteiros (x, y) tais que 0<=x<=m e 0<=y<=n,
+um par para o qual o valor da expressão x*y - x*x + y seja máximo e
+calcular também esse máximo.
+(usem o comando FOR)
+
+... talvez mais tarde eu escreva a solução aqui ...
+
+
+Mais exercícios com FOR e loops encaixados
+======================================
+Problema 19: Dados um inteiro positivo n e n inteiros positivos,
+determinar o máximo divisor comum a todos eles
+
+int main() 
+{
+  int n;      /* no. de elementos na sequencia */
+  int i;      /* contador de numeros lidos */
+  int mdc;    /* maximo divisor comum dos numeros lidos */
+  int num;    /* usado para encontrar  o novo mdc */
+  int resto ;
+
+  /* leia o tamanho da sequecia */
+  printf("Entre com n: ");
+  scanf ("%d", &n);
+
+  /* leia o 1o. numero da sequencia */
+  printf("Entre com o 1o. numero da sequencia: ");
+  scanf ("%d", &mdc);
+  
+  for (i = 1; i < n; i++) {
+    printf("Entre com o %do. numero da sequencia: ", i+1);
+    scanf ("%d", &num);
+
+    /* calcule o max divisor comum de mdc e num */ 
+    /* for (divisor = mdc; mdc % divisor != 0 || numero % divisor != 0; divisor--); */
+    do {
+      resto = mdc % num ;
+      mdc = num ;
+      num = resto ;
+    }
+    while (resto != 0) ;
+  }
+
+  printf("MDC = %d\n", mdc);
+  return 0;
+}
+
+
+

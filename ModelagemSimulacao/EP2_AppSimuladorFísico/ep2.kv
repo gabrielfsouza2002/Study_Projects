@@ -1,0 +1,437 @@
+<TelaPrincipal>:
+    BotoesLaterais:
+        size_hint: .1, 1
+
+    Telas:
+        id: gerenciador
+        size_hint: .9, 1
+        pos_hint: {"right": 1, "left": .1}
+
+        Acelerometro:
+        LerDados:
+        QuedaLivre:
+        MUV:
+        MRU:
+
+<BotoesLaterais>:
+    orientation: "vertical"
+    padding: 5
+    spacing: 5
+
+    BotaoVertical:
+        text: "Acelerômetro"
+        font_size: 24
+		on_press: app.root.ids.gerenciador.current = "acelerometro"
+    
+	BotaoVertical:
+	    text: "Processar dados"
+        font_size: 24
+        on_press:
+            app.root.ids.gerenciador.current = "lerDados"
+            app.root.ids.gerenciador.get_screen("lerDados").mostrar_carregar()
+
+<BotaoVertical@ButtonBehavior+Label>:
+    canvas.before:
+        Color:
+            rgba: [1, 1, 1, .35]
+
+        Rectangle:
+            pos: self.pos
+            size: self.width, self.height
+
+        PushMatrix
+
+        Rotate:
+            angle: 90
+            origin: self.center
+
+    canvas.after:
+        PopMatrix    
+
+<Acelerometro>:
+    name: "acelerometro"
+
+    BoxLayout:
+        orientation: "vertical"   
+
+	BoxLayout:
+	    id: grafico
+	    size_hint_y: .9
+	    padding: 5
+	    spacing: 5
+	    pos_hint: {"top": 1}
+    
+	BoxLayout:
+	    size_hint_y: .1
+	    padding: 5
+	    spacing: 5
+
+	    Button:
+			id: botao_iniciar
+	        text: "Iniciar / Reiniciar"
+	        font_size: 24
+	        on_release:
+	            root.iniciar()
+	        disabled: False
+	    
+	    Button:
+			id: botao_parar
+	        text: "Parar"
+	        font_size: 24
+	        on_release: root.parar()
+
+<SalvarArquivo>:
+    nome_arquivo: text_input
+
+    BoxLayout:
+    	padding: 5
+        spacing: 5
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+
+        FileChooserListView:
+            id: filechooser
+            on_selection: nome_arquivo.text = self.selection and self.selection[0] or ""
+
+        TextInput:
+            id: text_input
+            size_hint_y: None
+            height: 75
+            multiline: False
+
+        BoxLayout:
+            padding: 5
+            spacing: 5
+            size_hint_y: None
+            height: 75
+        
+		    Button:
+                text: "Cancelar"
+                on_release: root.cancelar()
+
+            Button:
+                text: "Salvar"
+                on_release: root.salvar(filechooser.path, text_input.text)
+
+<LerDados>:
+    name: "lerDados"
+
+    BoxLayout:
+        orientation: "horizontal"
+        padding: 5
+        spacing: 5
+
+        BoxLayout:
+            orientation: "vertical"
+
+            Button:
+                text: "Queda Livre"
+                font_size: 24
+                on_release:
+					root.manager.current = "quedaLivre"
+					app.root.ids.gerenciador.get_screen("quedaLivre").grafico_inicial()
+            
+            Button:
+                text: "MRU"
+                font_size: 24
+                on_release: 
+					root.manager.current = "mru"
+					app.root.ids.gerenciador.get_screen("mru").grafico_inicial()
+            
+            Button:
+                text: "MUV"
+                font_size: 24
+                on_release: 
+					root.manager.current = "muv"
+					app.root.ids.gerenciador.get_screen("muv").grafico_inicial()
+
+<CarregarArquivo>:
+    BoxLayout:
+        padding: 5
+        spacing: 5
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        
+		FileChooserListView:
+            id: filechooser
+
+        BoxLayout:
+            padding: 5
+            spacing: 5
+            size_hint_y: None
+            height: 75
+
+            Button:
+                text: "Cancelar"
+                on_release: root.cancelar()
+
+            Button:
+                text: "Carregar"
+                on_release: root.carregar(filechooser.path, filechooser.selection)
+
+<QuedaLivre>:
+    name: "quedaLivre"
+
+    BoxLayout:
+        orientation: "vertical"   
+	    
+	BoxLayout:
+	    size_hint_y: .1
+	    padding: 5
+	    spacing: 5
+	    pos_hint: {"down": .9, "top": 1}
+	    
+	    Button:
+	        text: "Verificar início e fim"
+	        font_size: 24
+			on_release: root.grafico_inicial()
+            
+	    Button:
+	        text: "Zoom na Queda"
+	        font_size: 24
+			on_release: root.zoomNaQueda()
+
+		Button:
+	        text: "Gerar dados"
+	        font_size: 24
+			on_release: root.gerarDados()
+	    
+	BoxLayout:
+	    id: dados
+	    size_hint_y: .8
+	    padding: 5
+	    spacing: 5
+	    pos_hint: {"down": .1, "top": .9}
+		orientation: "vertical"
+	    
+	BoxLayout:
+	    orientation: "horizontal"   
+	    size_hint_y: .1
+	    padding: 5
+	    spacing: 5
+
+	    BoxLayout:
+	        orientation: "vertical"
+
+	        Label:
+	            text: "Início"
+	            font_size: 24
+
+	        TextInput:
+				id: inicioQL
+	            font_size: 24
+
+	        Label:
+	            text: "Fim"
+	            font_size: 24
+
+	        TextInput:
+				id: fimQL
+	            font_size: 24
+
+	    BoxLayout:
+	        orientation: "vertical"
+
+	        Label:
+	            text: "Quantidade amostras"
+	            font_size: 24
+
+	        TextInput:
+				id: quantAmostras
+	            font_size: 24
+
+	        Label:
+			Label:
+        
+<MRU>:
+    name: "mru"
+    
+    BoxLayout:
+        orientation:"vertical"   
+			
+		BoxLayout:
+			size_hint_y: .1
+			padding: 5
+			spacing: 5
+			pos_hint: {"down": .9, "top": 1}	
+			
+			Button:
+				text: "Verificar início e fim"
+				font_size: 24
+				on_release: root.grafico_inicial()
+			
+			Button:
+				text: "Zoom no MRU"
+				font_size: 24
+				on_release: root.zoomNoMRU()
+				
+			Button:
+				text: "Gerar dados"
+				font_size: 24
+				on_release: root.gerarDados()
+			
+		BoxLayout:
+			id: dados
+			size_hint_y: .8
+			padding: 5
+			spacing: 5
+			pos_hint: {"down": .1, "top": .9}
+			orientation: "vertical"
+			
+		BoxLayout:
+			orientation: "horizontal"
+			size_hint_y: .1
+			padding: 5
+			spacing: 5
+
+			BoxLayout:
+				orientation: "vertical"
+
+				Label:
+					text: "Início"
+					font_size: 24
+
+				TextInput:
+					id: inicioMRU
+					font_size: 24
+
+				Label:
+					text: "Fim"
+					font_size: 24
+
+				TextInput:
+					id: fimMRU
+					font_size: 24
+
+			BoxLayout:
+				orientation: "vertical"
+
+				Label:
+					text: "Distância"
+					font_size: 24
+
+				TextInput:
+					id: distMRU
+					font_size: 24
+
+				Label:
+					text: "Proeminência"
+					font_size: 24
+
+				TextInput:
+					id: proemMRU
+					font_size: 24
+
+			BoxLayout:
+				orientation: "vertical"
+
+				Label:
+					text: "Tamanho passo"
+					font_size: 24
+
+				TextInput:
+					id: tamanhoPasso
+					font_size: 24
+
+				Label:
+				Label:
+      
+<MUV>:
+    name: "muv"
+    
+    BoxLayout:
+        orientation: "vertical"   
+	    
+	BoxLayout:
+	    size_hint_y: .1
+	    padding: 5
+	    spacing: 5
+	    pos_hint: {"down": .9, "top": 1}	
+	    
+	    Button:
+	        text:"Verificar início e fim"
+	        font_size: 24
+			on_release: root.grafico_inicial()
+		
+		Button:
+	        text:"Zoom no MUV"
+	        font_size: 24
+			on_release: root.zoomNoMUV()
+            
+	    Button:
+	        text: "Gerar dados"
+	        font_size: 24
+			on_release: root.gerarDados()
+	    
+	BoxLayout:
+	    id: dados
+	    size_hint_y: .8
+	    padding: 5
+	    spacing: 5
+	    pos_hint: {"down": .1, "top": .9}
+		orientation: "vertical"
+	    
+	BoxLayout:
+	    orientation: "horizontal"   
+	    size_hint_y: .1
+	    padding: 5
+	    spacing: 5
+
+	    BoxLayout:
+	        orientation: "vertical"
+
+	        Label:
+	            text: "Início"
+	            font_size: 24
+
+	        TextInput:
+				id: inicioMUV
+	            font_size: 24
+
+	        Label:
+	            text: "Fim"
+	            font_size: 24
+
+	        TextInput:
+				id: fimMUV
+	            font_size: 24
+	        
+	    BoxLayout:
+	        orientation: "vertical"
+
+	        Label:
+	            text: "Distância"
+	            font_size: 24
+
+	        TextInput:
+				id: distMUV
+	            font_size: 24
+
+	        Label:
+	            text: "Proeminência"
+	            font_size: 24
+
+	        TextInput:
+				id: proemMUV
+	            font_size: 24
+
+	    BoxLayout:
+	        orientation: "vertical"
+
+	        Label:
+	            text: "Tamanho passo"
+	            font_size: 24
+	        
+			TextInput:
+				id: tamPassoMUV
+	            font_size: 24
+
+	        Label:
+	            text: "Velocidade inicial"
+	            font_size: 24
+
+	        TextInput:
+				id: velIniMUV
+	            font_size: 24

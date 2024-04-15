@@ -1,0 +1,163 @@
+Resumo da aula 02 (23/03)
+
+=================
+Problema 1: Dados dois números quaisquer, calcular
+a soma deles.
+
+     a <-- ler um número
+     b <-- ler um número
+     soma <-- a + b
+     imprimir soma
+
+
+* Por enquanto vamos entender que "ler um número"
+significa capturar um número digitado por um
+usuário e colocar "dentro" do computador.
+"imprimir" por enquanto pode ser entendido como
+enviar um dado para "fora" do computador (pode
+ser, por exemplo, mostrar o dado na tela)
+
+
+Operadores aritméticos
+----------------------
+adição: +
+subtração: -
+multiplicação: *
+divisão: /
+
+
+=================
+Problema 2: Dada a nota (entre 0 e 10) de um estudante,
+verificar se o estudante foi aprovado ou reprovado
+
+    nota <-- ler um número
+    se nota >= 5
+        imprimir "aprovado"
+    senão
+        imprimir "reprovado"
+
+
+Operadores relacionais (para comparar valores)
+   >
+   <
+   >=
+   <=
+   ==
+   !=
+   
+=================
+Problema 3: Dada a nota (entre 0 e 10) de um estudante,
+verificar se o estudante "está em cima do muro" (isto é,
+se a sua nota está no intervalo fechado [4, 6])
+
+
+    nota <-- ler um número
+    se nota >= 4 E nota <= 6
+        imprimir "está em cima do muro"
+    senão
+        imprimir "não está em cima do muro"
+
+ou
+
+    nota <-- ler um número
+    se nota < 4 OU nota > 6
+        imprimir "não está em cima do muro"
+    senão
+        imprimir "está em cima do muro"
+
+
+* Note que a expressão lógica
+    NÃO ( nota >= 4 E nota <= 6 )
+é equivalente a
+    nota < 4 OU nota > 6
+
+
+Expressão lógica: as expressões acima são
+exemplos de expressões lógicas pois quando
+computamos o valor delas, o resultado é
+o valor True ou False
+
+
+Operadores lógicos
+------------------
+ Sejam a e b duas expressões lógicas. Então:
+
+   a  |  b  | a E b | a OU b | NÃO(a)
+ -----+-----+-------+--------+-------
+   F  |  F  |   F   |   F    |   V
+   F  |  V  |   F   |   V    |   V
+   V  |  F  |   F   |   V    |   F
+   V  |  V  |   V   |   V    |   F
+
+
+=================
+Problema 4: Dada a nota (entre 0 e 10) de um estudante,
+atribuir um conceito de acordo com a regra abaixo:
+
+    conceito | regra
+   ----------+------------------
+       A     | nota em [8.5, 10]
+       B     | nota em [7, 8.5)  (intervalo aberto à direita)
+       C     | nota em [5, 7)
+       R     | nota em [0, 5)
+
+
+   nota <-- ler um número
+   conceito <-- "R"
+
+   se nota >= 8.5
+       conceito <-- "A"
+   senão
+       se nota >= 7
+           conceito <-- "B"
+       senão
+           se nota >=5
+	       conceito <-- "C"
+
+   imprimir conceito
+
+
+* O comando se/senão separa o universo
+em duas partes. No caso acima, se nota>=8.5
+separa as notas que são maiores ou iguais
+a 8.5 para um lado e aqueles que são menores
+para outro. Se a nota cai na primeira metade,
+eu já sei o conceito e não preciso fazer
+mais verificações. Assim, nessa situação, será
+executada a atribuição
+    conceito <-- "A"
+e em seguida
+    imprimir conceito
+
+Se a nota é menor do que 8.5, então ainda não
+sei atribuir o conceito e precisarei fazer
+mais verificações.
+
+
+Resumindo conceitos vistos
+--------------------------
+    variável (espaço em memória)
+    atribuição
+    operadores aritméticos
+    operadores relacionais
+    operadores lógicos
+    expressões lógicas
+    comando de seleção (se/senão) --> desvios
+
+
+Proposta de lição de casa
+-------------------------
+Problema 5: Dado um ponto (x,y) no plano real,
+verificar a qual quadrante o ponto pertence,
+segundo o diagrama abaixo.
+(suponha que x e y são diferentes de zero e
+que o usuário vai digitar x e depois y)
+
+                |
+	   NO   |   NE
+                |
+        --------+--------
+                |
+	   SO   |   SE
+                |
+     

@@ -1,0 +1,194 @@
+Resumo da aula 19 (30/05/2022)
+
+
+Resumo do que foi visto até agora no curso
+------------------------------------------
+
+1. Tipos de variáveis
+
+  int
+  double / float
+  char
+  pointer, array
+
+  Atribuição:
+     cast implícito
+         int  n ;
+         n = 1.5 ;  /* 1.5 é convertido para o inteiro 1 */
+     cast explícito
+         int  n ;
+         double x ;
+         n = 1 ;
+         x = (double)n/2 ;  /* o valor de n, 1, é convertido
+                               para o real 1.0 antes da divisão.
+                               O conteúdo de n continua sendo
+                               o inteiro 1 */
+2. Operações
+  - aritméticas
+  - relacionais
+  - lógicas
+
+3. Comando de seleção
+  if
+  if / else
+
+4. Comandos de repetição
+  while ( ) {  }  
+  do {   } while ( ) ;
+  for (  ;  ;  ) {  }
+  indicadores de passagem (flag)
+
+5. Funções
+  - com valor de retorno, sem valor de retorno
+  - parâmetros (valores ou endereços)
+  - chamada de função
+
+6. Arrays (vetores) - variáveis indexadas
+  - índices variam de 0 a tamanho-1
+  - arrays são apontadores
+     - V[0] é o mesmo que *V
+     - V[1] é o mesmo que *(V+1) ---> + aqui é aritmética de ponteiros
+     - V[i] é o mesmo que *(V+i)
+     - &V[0] é o mesmo que V
+     - &V[1] é o mesmo que V+1
+
+
+
+===================================
+Problema 39: Dado um inteiro positivo n e uma sequência
+com n números inteiros, imprimir a sequência em ordem
+crescente.
+
+/* Na iteração i do laço principal, busca-se
+   o menor elemento no segmento i .. n-1 do
+   vetor e, ao final, garante-se que o menor
+   deles na posição i. Desta forma, após i
+   iterações, sabemos que os elementos nas
+   posições V[0], V[1], .... V[i] já estão
+   corretas. Isso é repetido até a penúltima
+   posição */
+   
+void selection_sort( int V[MAX], int n)
+{
+  int i, j, aux ;
+
+  for(i=0; i<n-1; i++) {
+    for(j=i+1; j<n; j++) {
+      if(V[i] > V[j]) {
+        aux = V[i] ;
+        V[i] = V[j] ;
+        V[j] = aux ;
+      }
+    }
+  }  
+}
+
+/* A cada iteração do laço principal
+   procede-se a comparação entre V[j] e V[j+1],
+   para todos os pares desse tipo no vetor,
+   fazendo-se a troca entre eles caso a ordem
+   esteja invertida. Ao final da primeira passada,
+   garante-se que o maior da sequência ``foi parar''
+   para o final do vetor. Na segunda passado,
+   o segundo maior vai para a penúltima posição
+   e assim por diante */
+   
+void bubble_sort( int V[MAX], int n)
+{
+  int passada, j, aux ;
+
+  for(passada=1; passada<n; passada++)
+    for(j=0; j<n-1; j++)
+      if(V[j] > V[j+1]) {
+        aux = V[j+1] ;
+        V[j+1] = V[j] ;
+        V[j] = aux ;
+      }
+}
+
+/* bubble sort melhorado: se em uma passada não
+   ocorre nenhuma troca, o vetor já está ordenado
+   e então podemos parar.
+   Além disso, como a cada passada garanto que
+   o maior vai parar para o final do trecho sendo
+   processado, a cada passada posso reduzir o
+   trecho a ser analisado de 0 até n-passada-1 */
+   
+void bubble_sort( int V[MAX], int n)
+{
+  int passada, j, aux, trocou ;
+
+  trocou = 1 ;
+  for(passada=1; passada<n && trocou; passada++) {
+  
+    trocou = 0 ;
+    
+    /* se passada==i, então todos os elementos
+       nas posições n-1, n-2, ..., n-i+1 já estão
+       na posição correta. A última comparação
+       deve ser entre V[n-passada-1] e V[n-passada] */
+       
+    for(j=0; j<n-passada; j++) {                                         
+      if(V[j] > V[j+1]) {
+        aux = V[j+1] ;
+        V[j+1] = V[j] ;
+        V[j] = aux ;
+        trocou = 1 ;
+      }
+    }
+    
+  } 
+}
+
+/* Usa-se a suposição de que em uma certa iteração
+   i, todos os elementos nas posições 0 a i-1
+   estão ordenados. Então, nessa iteração i, o objetivo
+   é inserir o elemento V[i] na posição correta.
+   Ao fazer isso, garantimos que as posições de
+   0 a i estará ordenada. Isso é repetido até o
+   último elemento */
+   
+void insertion_sort(int x[], int n) {
+  int i, j, aux ;
+
+  for(i=1; i<n; i++) {
+
+    /* para cada elemento x[i] no vetor, fazer: */
+    
+    j = i - 1 ; /* o trecho de 0 a i-1 está ordenada */
+
+    /* Queremos agora encontrar a posição na qual
+       x[i] será inserida. Vamos fazer essa busca
+       da posição i-1 para trás. Enquanto fazemos essa
+       busca, já vamos deslocando cada elemento
+       com o qual comparamos para uma posição posterior */
+
+    aux = x[i] ;
+    
+    /* no while seguinte, quando j<0, a primeira
+       condição fica falsa e a segunda condição nem
+       é testada. Assim, não há problema de acesso
+       a um indice negativo ... */
+
+    while (j >= 0 && x[j]>aux) {
+      x[j+1] = x[j] ;
+      j=j-1 ;
+    }
+
+    /* acabamos de abrir um espaço na posição j+1
+       para encaixar x[i] */
+       
+    x[j+1] = aux ;
+
+    i = i+1 ;
+  }
+}
+
+
+==========
+
+Não é preciso decorar algoritmos de ordenação
+para a prova.
+
+Arquivos não caem na prova.
+

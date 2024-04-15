@@ -1,0 +1,149 @@
+Resumo da aula 06 (06/04)
+-------------------------
+
+Toṕicos de hoje:
+   - Operações / e %
+   - Precedência de operadores
+   - operações && (AND), || (OR) e ! (NOT)
+   - Mais laços e a ideia de sentinela (indicador de passagem) no laço.
+
+
+=======================
+Correção do problema da aula passada
+
+Problema 10: Dado um inteiro positivo, calcular a soma
+de seus dígitos.
+
+    ---------------
+    int num, copia_num ;
+    int soma ;
+
+    printf("Digite um inteiro positivo: ") ;
+    scanf("%d", &num) ;
+
+    soma = 0 ;
+    copia_num = num ;
+    
+    while (num > 0) {
+       soma = soma + num%10 ;
+       num = num/10 ;
+    }
+
+    printf("A soma dos dígitos em %d é %d\n", copia_num, soma) ;
+    return 0 ;
+    ---------------
+
+- % calcula o resto da divisão. Exemplo: 37%10 é 7
+- / calcula a parte inteira da divisão. Exemplo:  37/10 é  3
+- Em soma + num%10, a operação % tem precedência sobre +
+  Porém, em algumas situações a precedência não é clara.
+  Exemplo: em 5/2*3 o que estamos querendo calcular?
+           (5/2)*3 ou 5/(2*3). A primeira vale 6 e a segunda vale 0
+  Em caso de situações que parecem ambíguas, inclua parênteses
+  para indicar explicitamente a precedência.
+  A linguagem C tem um esquema de precedências estabelecido. Outras
+  também devem ter, mas não podemos dizer se todas implementam
+  o mesmo esquema de precedências.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+INDICADOR DE PASSAGEM (flag): em muitas situações, não
+sabemos a priori quantas vezes um laço precisa ser
+repetido. Tipicamente, são situações nas quais assume-se
+um certo estado até que se prove o contrário.
+No momento em que se encontra uma evidência que
+altera o estado inicialmente assumido, podemos
+concluir que aquele estado não mais vale e
+podemos parar de buscar uma evidência (prova) contrária.
+
+Os exercícios abaixo podem ser resolvidos usando um
+indicador de passagem. 
+
+=======================
+Problema 11: Dados um número inteiro n, n>0, e uma sequência com
+n números inteiros, verificar se a sequência está em ordem
+crescente (não precisa ser estritamente crescente).
+
+Exemplos     n    sequência       resposta
+           -------------------------------
+	     3    1  2  3         Sim
+	     1    -6              Sim
+	     2    3 -8            Não
+	     5    4  4  4  4  4   Sim
+	     3    10  12  11      Não
+
+Neste exercício, qual é o estado inicial mais adequado ?
+Como podemos usar um indicador de passagem para sinalizar
+que aquele estado inicial é "quebrado" e em seguida
+interromper as iterações do laço (pois já teremos
+uma resposta) ?
+
+Solução
+-------
+
+#include <stdio.h>
+
+int main() {
+    int n ;
+    int ant, atu ;
+    int eh_crescente ;
+
+    /* suporemos inicialmente que a sequência é crescente */
+    eh_crescente = 1 ;  
+
+    /* leitura de n */
+    printf("Digite n: ") ;
+    scanf("%d", &n) ;
+
+    printf("Digite os números da sequência\n") ;
+    
+    /* Leitura do primeiro elemento da sequência,
+       com o qual o próximo será comparado */
+    scanf("%d", &ant) ;
+
+    /* A verificação deve continuar até o final
+       da sequência ou até ser encontrado um
+       número menor que o anterior */
+    while ((n>1) && (eh_crescente==1)) {
+        scanf("%d", &atu) ;
+	if (ant > atu) {
+	    eh_crescente = 0 ;
+	}
+	else {
+	    n = n - 1 ;
+	    ant = atu ;
+	}
+    }
+    if (eh_crescente==1) {
+        printf("A sequência é crescente\n") ;
+    }
+    else {
+         printf("A sequência não é crescente\n") ;
+    }
+    return 0 ;
+}
+
+Comentário: Se n é 1, o programa não executa nem uma
+iteração do laço é já responde que "A sequência é crescente".
+Caso contrário, deverá ler o próximo número da sequência
+e comparar com o anterior. Isso deve ser repetido ou
+até se chegar ao final da sequência ou até ser
+encontrado um número que é menor que o anterior.
+É importante atualizar o anterior a cada iteração do laço.
+
+Operações lógicas em C
+     AND     && 
+     OR      ||
+     NOT     !
+
+
+=======================
+Problema 12: Dado um número inteiro n, n>0, verificar se n é primo.
+Obs: o número 1, por definição, não é primo.
+
+
+=======================
+Problema 13: Dizemos que um número inteiro positivo é triangular se ele é
+o produto de três números inteiros consecutivos. Por exemplo, 120 é triangular,
+pois 4*5*6 é igual a 120. Dado um número inteiro positivo n, verificar se n
+é triangular.

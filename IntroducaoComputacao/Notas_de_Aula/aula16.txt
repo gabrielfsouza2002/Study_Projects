@@ -1,0 +1,267 @@
+Resumo da aula 16 (18/05/2022)
+
+
+Revisão sobre apontadores
+-------------------------
+
+Apontadores são um tipo especial de variável.
+Na declaração colocamos um asterisco (*) para indicar
+que uma variável é um apontador. Como pode ser visto
+no exemplo a seguir, apontadores podem "apontar" para
+diferentes tipos de valores.
+
+    int    *p1 ;
+    char   *p2 ;
+    double *p3 ;
+
+Para entender o que são apontadores e elementos apontados
+por eles, vamos usar um exemplo. Vamos considerar as
+seguintes duas variáveis:
+
+     int    n ;
+     int    *p ;
+
+Sabemos que podemos atribuir um valor a n . Por exemplo,
+
+     n = 10 ;
+     
+Outra forma de se inicializar a variável  n   é   por meio
+da atribuição de um valor lido, como mostrado a seguir:
+
+     scanf("%d", &n) ;
+
+Aqui, é como se eu estivesse dizendo o seguinte para a
+função "scanf":
+
+   Leia um número inteiro (indicado pelo argumento "%d")
+   e coloque o valor lido na posição de memória cujo
+   endereço é o endereço da variável  n  (indicado pelo
+   argumento "&n") -- aqui, "posição de memória cujo
+   endereço é o endereço da variável  n"  é  a própria
+   variável n
+
+
+Que tipo de valores podemos atribuir ao apontador p ?
+Tipicamente fazemos o seguinte:
+
+     p = &n ;
+
+Ao fazer    "p = &n ;"   o que estamos fazendo é atribuindo
+o endereço da variável  n  para a variável  p . Com isso,
+p  passa a conter o endereço de  n  (isto é,  &n ) e
+dizemos que  p   aponta  para   n
+
+Depois de feito  p = &n ;  então em vez de
+
+     scanf("%d", &n) ;
+
+podemos fazer, equivalentemente,
+
+     scanf("%d", p) ;
+
+(afinal   p  é  igual  a   &n )
+
+
+Depois da execução deste último scanf, adivinhe qual
+valor estrá em  n ?  Será o número digitado pelo usuário, pois
+ao fazermos  p = &n  , fazemos uma amarração entre  n  e  p
+Isto é,  p  aponta  para  n  e   n  é apontado por p.
+
+Podemos denotar o elemento apontado por  p  por  *p ;
+então  de fato,   *p = *(&n) = n !!!
+
+Assim
+   printf("n=%d\n", n) ;
+e
+   printf("n=%d\n", *p) ;
+são equivalentes.
+
+----------
+Só para complementar: Podemos fazer ?
+
+     p = 153 ;
+
+A resposta simples para esta pergunta é NÃO (pois em geral
+não sabemos ou não queremos saber quais são os endereços "válidos").
+Esse tipo de atribuição resultará em um warning durante a
+compilação (e caso o programa seja executado, muito possivelmente
+resultará um erro de execução).
+----------
+
+Para concluir, note que enquanto para as variáveis comuns
+tipo  "int n"  associamos apenas um valor (o conteúdo dela
+ou, equivalentemente, o valor armazenado nela), para
+as variáveis do tipo  apontador  "int *p"  associamos dois
+valores:
+
+   p - seu valor será interpretado como endereço de
+       uma posição de memória (por isso é importante
+       que qualuer atribuição feita a  p  seja  um valor
+       de endereço válido)
+
+   *p - corresponde ao elemento apontado por  p,
+        e mais especificamente ao elemento que está
+	na posição de memória cujo endereço é o
+	valor de  p
+
+   Exemplo:
+     p = &n ;  /* atribui a p o endereço da variável n */
+     *p = 10 ; /* atribui ao elemento ou posição apontada
+                  por p o valor 10. O elemento apontado
+		  é justamente o  n. Logo este comando
+		  atribui o valor 10 à variável  n   */
+
+-----------------------------
+
+Exercícios: Suponha que temos o seguinte trecho de código:
+
+   int n ;
+   int *p ;
+
+   n = 10 ;
+   p = &n ;
+   
+
+1) O que é *p ? Qual é seu valor ?
+
+2) Por que eu não devo fazer uma atribuição como a seguinte ?
+
+   p = 587 ;
+   
+3) A que corresponde   &(*p)  ?
+
+4) Por que no  scanf  ocorre erro quando escrevemos:
+
+   scanf("%d",  n) ;
+
+5) Posso fazer
+
+   *n = 10 ;    ?
+    
+6) O que vai ser impresso no seguinte código ?
+
+   int  a, b, c ;
+   int  *p1, *p2 ;
+
+   a = 5 ;     b = 3 ;
+   p1 = &a ;   p2 = &b ;
+   c = *p1 ;
+   *p1 = *p2 ;
+   *p2 = c ;
+   printf("a = %d   b = %d   tmp = %d\n", a, b, c );
+
+--------------------------------
+Para que servem os ponteiros ???
+
+Uma utilidade importante é na passagem de parâmetros na
+chamada de funções. Frequentemente queremos que uma
+certa função f1 altere o valor de uma variável que está
+em outra função f2. Da forma como a linguagem C é definida,
+a função f1 não consegue fazer referência direta às
+variáveis que estão em f2 por meio do nome das variáveis.
+Mas se a f1 souber os endereços das variáveis de f2,
+poderá fazer acesso a tais variáveis usando apondarores.
+
+Vejamos um exemplo "bobo". Suponha que a função f2 é a
+nossa já bem conhecida main().
+
+int main() {
+   int n ;
+
+   n = 0 ;
+   n = n+1 ;
+   return 0 ;
+}
+
+Agora vamos supor que a main() esqueceu como fazer
+para incrementar de 1 o valor de n ("n = n+1;") e
+ela vai querer usar uma função para fazer isso.
+
+Então vamos escrever uma função para fazer isso:
+
+void  incremente(int *p) {
+    *p = *p + 1 ;
+}
+
+Agora main pode usar a função incremente() :
+
+int main() {
+   int n ;
+
+   n = 0 ;
+   incremente(&n) ;
+   return 0 ;
+}
+
+Na chamada da função incremente, o endereço de n
+(&n) é copiado para o parâmetro  p.
+Quando a função incremente() faz referência a *p,
+está fazendo referência ao elemento apontado por
+p  que é o n  (*p = *(&n) = n)
+
+[ O exemplo acima visa apenas ilustrar a passagem de
+  endereços como argumentos na chamada de funções.
+  NÃO escreva nem use funções para fazer algo
+  óbvio que pode ser feito sem o uso de funções!!! ]
+
+
+=========================
+Problema 34: Escreva uma função que recebe um inteiro n > 0 e
+devolve o seu primeiro dígito, seu último dígito e altera o valor
+de n removendo seu primeiro e último dígitos. Exemplos:
+
+   valor inicial de n   primeiro dígito   último dígito   valor final de n
+   732 	                7 	          2       	  3
+   14738 	        1 	          8 	          473
+   1010 	        1 	          0 	          1
+   78  	                7 	          8 	          0
+   7 	                7 	          7 	          0
+
+Escreva um programa que recebe um inteiro positivo n e verifica se n é
+palíndromo. Suponha que n não contém o dígito 0.
+
+
+Solução
+-------
+#include <stdio,h>
+
+void descasca(int *n, int *prim, int *ult);
+
+int main() {
+  int n, nori, prim, ult;
+
+  scanf("%d", &n) ;
+  nori = n;
+
+  while(n>0) {
+    descasca(&n, &prim, &ult) ;
+    if(prim!=ult) {
+      printf("O numero %d não é palindromo\n", nori) ;
+      return 0 ;
+    }
+    printf("n=%d prim=%d ult=%d\n", n, prim, ult) ;
+  }
+  printf("O numero %d é palindromo\n", nori) ;
+  return 0 ;
+}
+
+void descasca(int *n, int *prim, int *ult) {
+  int m, pot=1 ;
+
+  *ult = *n%10 ;
+  *n = *n/10 ;
+
+  if(*n==0) *prim = *ult ;
+  else {
+    m = *n ;
+    pot=1 ;
+    while(m>9) {
+      m=m/10 ;
+      pot=pot*10 ;
+    }
+    *n = *n - m*pot;
+    *prim = m;
+  }
+}
+
+

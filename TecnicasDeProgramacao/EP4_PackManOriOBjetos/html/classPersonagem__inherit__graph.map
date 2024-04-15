@@ -1,0 +1,5 @@
+<map id="Personagem" name="Personagem">
+<area shape="rect" id="node1" title="Classe dos personagens do jogo (Fantasma e o Pacman)." alt="" coords="49,5,151,32"/>
+<area shape="rect" id="node2" href="$classFantasma.html" title="Essa classe herda a classe Personagem. Ela ira representar os Fantasmas." alt="" coords="5,80,91,107"/>
+<area shape="rect" id="node3" href="$classPacman.html" title="Essa classe herda a classe Personagem. Ela representa o Pacman." alt="" coords="115,80,189,107"/>
+</map>

@@ -1,0 +1,413 @@
+Resumo da aula 15 (16/05/2022)
+
+
+=========================
+Problema 33: Escreva uma função com o protótipo
+
+      char maiuscula (char ch) ;
+
+que recebe um caractere e devolve o mesmo convertido para
+maiúscula caso ele seja uma letra, e devolve o próprio caso
+o caractere não seja letra.
+      
+Escreva um programa que lê uma sequência de caracteres terminada
+por um ponto '.' e imprime a sequência com as letras convertidas
+para maiúscula.
+
+Para resolver esse problema, devemos saber um pouco sobre o
+código ASCII. Em particular, que as letras maiúsculas possuem
+código menor que as minúsculas.
+
+
+char maiuscula (char ch) {
+
+     if((ch >= 'a') && (ch <= 'z')) {
+       return ch - 'a' + 'A' ;
+     }
+     else {
+         return ch ;
+     }
+}
+
+int main() {
+    char ch ;
+
+    printf("Digite uma palavra seguida de ponto: ");
+    scanf("%c", &ch) ;
+    while(ch != '.') {
+    	printf("%c", maiuscula(ch)) ;
+	scanf("%c", &ch) ;
+    }
+    printf("\n") ;
+    return 0 ;
+}
+
+
+* Na função main, o usuário irá digitar a palavra inteira,
+seguida de ponto, e então teclar ENTER.
+É só após o ENTER que o "scanf" entra em ação. E ele está
+lendo apenas um caractere por vez. Pode ser um tanto
+misterioso, mas podemos pensar que a palavra mais o ponto
+digitados ficam armazenados em uma memória do teclado, e os
+caracteres dessa memória são consumidos um a um, um
+por cada execução do "scanf".
+(o "scanf" só acorda com um ENTER; mas existem outras
+funções na linguagem C que conseguem capturar o caractere
+assim que uma tecla é pressionada pelo usuário. Mas isso
+é só um comentário; isso não cai na prova :-).
+
+
+
+Mais do que um simples caractere: palavras
+------------------------------------------
+
+Como fazer a leitura de palavras ? Uma palavra inteira
+por vez (e não caractere por caractere) ?
+
+Veremos aqui, por enquanto, como fazer a leitura
+do nome de um arquivo.
+
+--------------------
+#define MAX  256  /* (tamanho máximo do nome de arquivo)+1 */
+
+int main() {
+    char fname[MAX] ;
+
+    printf("Digite o nome de um arquivo: ");
+    scanf("%s", fname) ;
+
+    printf("O nome de arquivo digitado foi: %s\n", fname);
+    return 0;
+}
+-------------------
+
+* Note que em   scanf("%s", fname)   não usamos o &.
+Por quê ? Porque fname é uma variável do tipo apontador.
+fname[MAX] significa que está sendo reservado espaço na
+memória para aramazenar MAX caracteres (MAX posições)
+e fname aponta para o início dessa região na memória.
+O valor de fname é o endereço do primeiro elemento
+(isto é, o endereço de fname[0]). Voltaremos a falar sobre
+isso quando falarmos de arrays.
+
+
+
+O que é um arquivo ?
+--------------------
+
+É um conjunto de bits armazenados no disco, ao qual está
+associado um nome. São úteis para armazenar dados ou informações
+no disco e fazermos acesso via nome sempre que necessário (os
+arquivos ficam gravados no disco, mesmo quando desligamos o
+computador). Mas, oviamente, quando há algum dano físico no
+disco, os arquivos e qualquer bit armazenado no disco podem
+ser perdidos.
+
+Vamos alterar o programa acima para que ele leia o nome de
+um arquivo e leia um número que está no arquivo.
+
+-------------------
+#define MAX  256  /* (tamanho máximo do nome de arquivo)+1 */
+
+int main() {
+    char fname[MAX] ;
+    int  n;
+    FILE *arq ;
+    
+    printf("Digite o nome de um arquivo: ");
+    scanf("%s", fname) ;
+
+    /* abrir o arquivo */
+    arq = fopen(fname, "r") ;  /* "r" indica leitura (read) */
+
+    fscanf(arq, "%d", &n) ;
+    printf("O nome de arquivo digitado foi: %s\n", fname) ;
+    printf("O número lido foi: %d\n", n) ;
+
+    /* fechar o aqruivo */
+    fclose(arq) ;
+    
+    return 0;
+}
+------------------
+
+Usa-se "fopen()" para abrir um arquivo e "fclose()" para se
+fechar o arquivo.
+
+Para a leitura de dados que estão em um arquivo do tipo texto,
+podemos usar "fscanf". O primeiro parâmetro dessa função é o
+descritor de arquivo (resultado do fopen).
+O "fscanf" pode ser usado com o mesmo espírito de uso de
+"scanf", isto é, supondo que os dados esperados estão de
+fato no arquivo (da mesma forma que fazemos com a entrada
+digitada pelo usuário -- em MAC0110 supomos que todos os
+usuários são perfeitos; não cometem atrocidades tais como
+digitar coisas nada a ver com a entrada esperada).
+
+
+=====================================================
+Um pouco de baixaria (assembly e linguagem de máquina)
+
+
+Todo programa escrito em qualquer linguagem de programação
+precisa ser traduzdido para a linguagem de máquina.
+Assemby é uma linguagem de baixo nível, simbólica,
+cujas instruções são praticamente equivalentes aos da
+linguagem de máquina.
+
+A seguir mostramos algumas opções do compilador  gcc
+que permitem a geração do código assembly dos programas C.
+
+Antes que perguntem novamente, ISSO NÃO CAIRÁ NA PROVA.
+
+Os exemplos abaixo podem estar ligeiramente diferentes
+das vistas em aula, mas são praticamente a mesma coisa:
+
+
+Exemplo1: Seja o código de "prog1.c"
+----------------------
+int main() {
+  int x=5;
+  int y=7;
+  
+  return 0;
+}
+----------------------
+
+===> Gerar o programa objeto (prog1.o)
+     Fazer o "dump" dele (você pode fazer o mesmo
+     para  amd  em lugar de intel e ver o que acontece)
+     
+/*
+   gcc -g -c prog1.c
+   objdump -d -M intel -S prog1.o
+*/
+
+----------------------
+Desmontagem da seção .text:
+
+0000000000000000 <main>:
+   0:	55                   	push   rbp
+   1:	48 89 e5             	mov    rbp,rsp
+   4:	c7 45 f8 05 00 00 00 	mov    DWORD PTR [rbp-0x8],0x5
+   b:	c7 45 fc 07 00 00 00 	mov    DWORD PTR [rbp-0x4],0x7
+  12:	b8 00 00 00 00       	mov    eax,0x0
+  17:	5d                   	pop    rbp
+  18:	c3                   	ret
+
+
+rbp  é registrador que aponta para a BASE do
+contexto atual na pilha de execução
+
+rsp é o registrador que aponta para o topo (última
+posição ocupada) da pilha de execução
+
+eax é o registrador que conterá o valor de retorno
+da função
+
+
+O código acima mostra como é o código assembly do programa
+prog1.c (função main). Abaixo uma tentativa de explicação:
+
+  push   rbp                      - empilha valor de rbp (base atual)
+  mov    rbp,rsp                  - rbp recebe o valor de rsp
+                                    (mudança para o contexto da main())
+  mov    DWORD PTR [rbp-0x8],0x5  - rbp-8 corresponde à posição 8 bytes
+                                    anterior ao apontado por rbp
+				    (se cada posição usa 4 bytes, então
+				     será duas posições acima de rbp).
+				    Nessa posição é armazenado 5, logo
+				    é a variável x
+  mov    DWORD PTR [rbp-0x4],0x7  - rbp-4 é uma posição acima da apontada
+                                    por rbp. Nessa posição é armazenado
+				    o valor 7, logo é a variável y
+  mov    eax,0x0                  - prepara o valor de retorno ( 0 )
+  pop    rbp                      - restaura a base anterior
+                                    (isso implica que o contexto do
+				     main vai ser desfeito)
+  ret                             
+
+
+
+
+Outra forma de ver o assembly é via a seguinte opção
+----------------------
+/*
+   gcc -S prog1.c
+*/
+----------------------
+
+	.file	"prog1.c"
+	.text
+	.globl	main
+	.type	main, @function
+main:
+.LFB0:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	$5, -8(%rbp)
+	movl	$7, -4(%rbp)
+	movl	$0, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	main, .-main
+	.ident	"GCC: (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0"
+	.section	.note.GNU-stack,"",@progbits
+
+
+Filtrando as "sujeiras", temos algo como     
+-----------------------
+main:
+	pushq	%rbp             ---> empilha base
+
+	movq	%rsp, %rbp       ---> copia stack (topo) para base
+
+	movl	$5, -8(%rbp)     ---> base-8 recebe 5
+
+	movl	$7, -4(%rbp)     ---> base-4 recebe 7
+	
+	movl	$0, %eax         ---> retorno recebe 0
+	
+	popq	%rbp             ---> desempilha base
+
+	ret
+
+
+==========================================================
+Exemplo 2: prog2.c (esse não vimos em sala. Inclui
+chamada a uma função + passagem de parâmetro)
+
+-------------------
+#include <stdio.h>
+
+int soma(int a, int b) {
+  int s;
+
+  s = a + b;
+  return s ;
+}
+
+int main() {
+
+  int a, b, s;
+
+  a = 5 ;
+  b = 7 ;
+  s = soma(a, b) ;
+
+  return 0 ;
+  
+}
+
+
+Segue, sem explicação ....
+-----------------------------
+	.file	"prog2.c"
+	.text
+	.globl	soma
+	.type	soma, @function
+soma:
+.LFB0:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -20(%rbp)
+	movl	%esi, -24(%rbp)
+	movl	-20(%rbp), %edx
+	movl	-24(%rbp), %eax
+	addl	%edx, %eax
+	movl	%eax, -4(%rbp)
+	movl	-4(%rbp), %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	soma, .-soma
+	.globl	main
+	.type	main, @function
+main:
+.LFB1:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	subq	$16, %rsp
+	movl	$5, -12(%rbp)
+	movl	$7, -8(%rbp)
+	movl	-8(%rbp), %edx
+	movl	-12(%rbp), %eax
+	movl	%edx, %esi
+	movl	%eax, %edi
+	call	soma
+	movl	%eax, -4(%rbp)
+	movl	$0, %eax
+	leave
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE1:
+	.size	main, .-main
+	.ident	"GCC: (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0"
+	.section	.note.GNU-stack,"",@progbits
+
+----------------------------
+
+Limpando a "sujeira" temos algo como:
+
+soma:
+	pushq	%rbp
+	movq	%rsp, %rbp
+	movl	%edi, -20(%rbp)
+	movl	%esi, -24(%rbp)
+	movl	-20(%rbp), %edx
+	movl	-24(%rbp), %eax
+	addl	%edx, %eax
+	movl	%eax, -4(%rbp)
+	movl	-4(%rbp), %eax
+	popq	%rbp
+	ret
+
+main:
+	pushq	%rbp
+	movq	%rsp, %rbp
+	subq	$16, %rsp
+	movl	$5, -12(%rbp)        -- a = 5;
+	movl	$7, -8(%rbp)         -- b = 7;
+	movl	-8(%rbp), %edx
+	movl	-12(%rbp), %eax
+	movl	%edx, %esi
+	movl	%eax, %edi
+	call	soma                 -- chamada de função
+	movl	%eax, -4(%rbp)       -- s=soma(a,b)
+	movl	$0, %eax
+	ret
+
+
+Aparecem mais registradores relacionados com a
+passagem de parâmetros na chamada de função. Não
+iremos decifrar isso aqui.
+Quem tiver curiosidade, pode procurar manuais
+de assembly para decifrar o que cada instrução
+e registradores significam.
+
+Como podem ver, o nível de instrução executado pelos
+computadores é de bem baixo nível.
+
+Esses exemplos são apenas para dar uma noção sobre
+o que o processador está executando de fato.
+
+--------------------------------
+

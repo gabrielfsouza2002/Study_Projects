@@ -1,0 +1,83 @@
+<Digit> ::= [0-9]
+<intnum> ::= (<Digit>)+
+<character> ::= [A-Z] | [a-z]
+<number> ::= <intnum> | <intnum> "." <intnum>
+<other_symb> ::= "_" | "! " | "?" | "<" | ">" | "#" | "%"
+<reserv_symb> ::= "(" | ")" | "+" | "-" | "*" | "~"
+<symbol> ::= <reserv_symb> | <other_symb>
+<reserv_word> ::= "cons" | "head" | "tail" |
+"if" | "let" | "letrec" | "true" | "false"
+"lambda" | "call"
+<reservedW> ::= <reserv_symb> | <reserv_word>
+<bool> ::= "true" | "false"
+
+<id> ::= <palavrasemif> | <palavrasemlambda> | <palavrasemletrecnemlet> | <palavrasemhead> | <palavrasemtail> | <palavrasemcons> | <palavrasemcall> | "i" | "l" | "h" | "t" | "c" | "f" | <restopalavras> | <palavrassemtrue> | <palavrassemfalse>
+<characterorDigit> ::= <character> | <Digit>
+
+<characternaoa> ::= [A-Z] | [b-z] | <Digit>
+<characternaob> ::= [A-Z] | "a" | [c-z] | <Digit>
+<characternaoc> ::= [A-Z] | [a-b] | [d-z] | <Digit>
+<characternaod> ::= [A-Z] | [a-c] | [e-z] | <Digit>
+<characternaoe> ::= [A-Z] | [a-d] | [f-z] | <Digit>
+<characternaof> ::= [A-Z] | [a-e] | [g-z] | <Digit>
+<characternaoh> ::= [A-Z] | [a-g] | [i-z] | <Digit>
+<characternaoi> ::= [A-Z] | [a-h] | [j-z] | <Digit>
+<characternaol> ::= [A-Z] | [a-k] | [m-z] | <Digit>
+<characternaom> ::= [A-Z] | [a-l] | [n-z] | <Digit>
+<characternaon> ::= [A-Z] | [a-m] | [o-z] | <Digit>
+<characternaoo> ::= [A-Z] | [a-n] | [p-z] | <Digit>
+<characternaor> ::= [A-Z] | [a-q] | [s-z] | <Digit>
+<characternaos> ::= [A-Z] | [a-r] | [t-z] | <Digit>
+<characternaot> ::= [A-Z] | [a-s] | [u-z] | <Digit>
+<characternaou> ::= [A-Z] | [a-t] | [v-z] | <Digit>
+
+<characternaoanaoe> ::= [A-Z] | [b-d] | [f-z] | <Digit>
+<characternaoanaoo> ::= [A-Z] | [b-n] | [p-z] | <Digit>
+<characternaoanaor> ::= [A-Z] | [b-q] | [s-z] | <Digit>
+
+
+
+<palavrasemif> ::= "if" <characterorDigit>+ | "i" ( E | (<characternaof> (<characterorDigit>)*))
+<palavrasemletrecnemlet> ::= "letrec" <characterorDigit>+ | "l" ( E | (<characternaoanaoe> (<characterorDigit>)*)) | "le" ( E | (<characternaot> (<characterorDigit>)*)) | "let" <characternaor> (<characterorDigit>)* | "letr" ( E | (<characternaoe> (<characterorDigit>)*)) | "letre" ( E | (<characternaoc> (<characterorDigit>)*))
+<palavrasemlambda> ::= "lambda" <characterorDigit>+ | "l" ( E | (<characternaoanaoe> (<characterorDigit>)*)) | "la" ( E | (<characternaom> (<characterorDigit>)*)) | "lam" ( E | (<characternaob> (<characterorDigit>)*)) | "lamb" ( E | (<characternaod> (<characterorDigit>)*)) | "lambd" ( E | (<characternaoa> (<characterorDigit>)*))
+<palavrasemhead> ::= "head" <characterorDigit>+ | "h" ( E | (<characternaoe> (<characterorDigit>)*)) | "he" ( E | (<characternaoa> (<characterorDigit>)*)) | "hea" ( E | ( <characternaod> (<characterorDigit>)*))
+<palavrasemtail> ::= "tail" <characterorDigit>+ | "t" ( E | (<characternaoanaor> (<characterorDigit>)*)) | "ta" ( E | (<characternaoi> (<characterorDigit>)*)) | "tai" ( E | (<characternaol> (<characterorDigit>)*))
+<palavrasemcons> ::= "cons" <characterorDigit>+ | "c" ( E | (<characternaoanaoo> (<characterorDigit>)*)) | "co" ( E | (<characternaon> (<characterorDigit>)*)) | "con" ( E | (<characternaos> (<characterorDigit>)*)) 
+<palavrasemcall> ::=  "call" <characterorDigit>+ | "c" ( E | (<characternaoanaoo> (<characterorDigit>)*)) | "ca" ( E | (<characternaol> (<characterorDigit>)*)) | "cal" ( E | (<characternaol> (<characterorDigit>)*))
+<palavrassemtrue> ::= "true" <characterorDigit>+ | "t" ( E | (<characternaoanaor> (<characterorDigit>)*)) | "tr" ( E | (<characternaou> (<characterorDigit>)*)) | "tru" ( E | (<characternaoe> (<characterorDigit>)*))
+<palavrassemfalse> ::= "false" <characterorDigit>+ | "f" ( E | (<characternaoa> (<characterorDigit>)*)) | "fa" ( E | (<characternaol> (<characterorDigit>)*)) | "fal" ( E | (<characternaos> (<characterorDigit>)*)) | "fals" ( E | (<characternaoe> (<characterorDigit>)*))
+<restopalavras> ::= ([A-Z] | [a-b] | [d-e] | [g-g] | [j-k] | [m-s] | [u-z]) (<characterorDigit>)*
+
+/* -- Operadores Aritm´eticos -- */
+<op_arith_bin> ::= " + " | " - " | " * "
+<op_arith_un> ::= " ~ "
+/* -- Express~oes Aritm´eticas -- */
+<arith_expr> ::= "(" <exprA_bin> ")" | "(" <exprA_un> ")" | <number>
+<exprA_bin> ::= <op_arith_bin> <code> " " <code>
+<exprA_un> ::= <op_arith_un> <code>
+/* -- Operadores Listas -- */
+<op_list> ::= "head " | "tail "
+/* -- Express~oes sobre listas -- */
+<list_expr> ::= <cons> | "(" <exprL> ")"
+<cons> ::= "(cons " <code> " " <code> ")"
+<exprL> ::= <op_list> <code>
+/* -- Express~oes Lambda (defini¸c~ao e aplica¸c~ao de fun¸c~oes) -- */
+<lamb_expr> ::= <lambda> | <call>
+<lambda> ::= "(lambda " <param> " " <code> ")"
+<param> ::= <id>
+
+<call> ::= "(call " <lambda> " " <code> ")"
+/* -- express~oes if -- */
+<if> ::= "if " <bool> " " <pos> " " <neg>
+<cond> ::= <code>
+<pos> ::= <code>
+<neg> ::= <code>
+/* -- express~oes let -- */
+<let_expr> ::= <let> | <letrec>
+<let> ::= "(let " <id> " " <def> " " <body> ")"
+<letrec> ::= "(letrec " <id> " " <lambda> " " <body> ")"
+<def> ::= <code>
+<body> ::= <code>
+/* -- C´odigo do programa -- */
+<code> ::= <expr> | <number>
+<expr> ::= <arith_expr> | <list_expr> | <lamb_expr> | <if> | <let_expr>

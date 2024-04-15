@@ -1,0 +1,258 @@
+Resumo da aula 05 (04/03)
+-------------------------
+
+1. Visita do NEU
+
+2. Resolvendo mais problemas: o objetivo é treinar e
+   consolidar o que discutimos até agora.
+   Em particular:
+     - LER o enunciado do problema com cuidado
+     - Evitar instruções desnecessárias
+     - Relembre os elementos de programação:
+          - entrada/saída
+          - variáveis
+	  - atribuição de valores a variáveis
+	  - comando de seleção se/senão
+	  - comando de repetição enquanto
+	  - operações aritméticas, relacionais e lógicas
+	  - expressões lógicas
+
+=======================
+Correção do problema da aula passada
+
+Problema 8: Dado um inteiro não-negativo n, calcular
+o fatorial de n.
+
+- aqui temos que n>=0 e precisamos calcular
+
+  n*(n-1)*(n-2)*(n-3)* ... * 1
+
+  Isso pode ser escrito também
+     1*2*...*(n-2)*(n-1)*n
+
+  O computador é uma máquina que só consegue fazer
+  coisas simples; cabe ao programador expressar o
+  processamento desejado em termos dessas coisas
+  simples.
+  Por exemplo, no caso acima, é preciso fazer com
+  que ele execute cada uma das multiplicações, uma
+  por uma.
+
+  Se examinarmos com cuidado, a multiplicação segue
+  um padrão. A cada vez que uma multiplicação é
+  feita, o que fazemos de fato é calcular
+
+     (produto dos termos já multiplicados)*(próximo termo)
+
+  Isso significa que preciso de um lugar (variável) para
+  armazenar "produto dos termos já multiplicados" e
+  também "próximo termo"
+
+
+  
+- Solução que calcula o produto final começando em 1
+
+  A variáver  termo  armazena o próximo termo a ser
+  usado na multiplicação
+    
+  A variável fat armazena o "produto dos termos já multiplicados"
+  e portanto no final conterá o fatorial de n
+
+  ---------------------
+  int main() {
+      int n, termo, fat ;
+
+      printf("Digite n (n>=0): ");
+      scanf("%d", &n) ;
+      
+      fat = 1 ;
+      termo = 1 ;
+      while (termo < n) {
+          termo = termo + 1 ;
+          fat = fat*termo ;
+      }
+      printf("O fatorial de %d é %d\n", n, fat) ;
+      return 0 ;
+  }
+  ---------------------
+
+  Se n==0 ou se n==1, o laço não será executado
+  nem uma única vez
+
+  O último valor que multiplica fat em "fat = fat*termo ;"
+  é  n  , pois na próxima iteração a expressão
+  "termo < n" no laço resultará False
+
+
+
+- Solução que calcula o produto final começando em n
+  ---------------------
+  int main() {
+      int n, fat ;
+
+      printf("Digite n (n>=0): ");
+      scanf("%d", &n) ;
+      
+      fat = 1 ;
+      while (n > 1) {
+          fat = fat*n ;
+	  n = n - 1 ;
+      }
+      printf("O fatorial é %d\n", fat) ;
+      return 0 ;
+  }
+  ---------------------
+
+  Neste caso também, se n==0 ou se n==1, o laço não
+  será executado nem uma única vez
+
+  O valor de n vai decrescendo à medida que
+  iteramos o laço. Ao final, seu valor será 1.
+  Como consequência, no final não temos mais
+  o valor original de n
+
+
+=======================
+Agora vamos ver o exercício EX2
+
+Problema 9: Dado um inteiro positivo n (tamanho de uma
+sequência) e uma sequência com n números inteiros, imprimir
+o maior número da sequência.
+
+Solução 1 (com erro)
+  ---------
+  n <- ler um número
+  cont <- 1
+
+  enquanto (cont <= n)
+      num <- ler
+      cont <- 1 + cont
+      se (num > maior)
+          num <- maior
+	  
+  imprimir maior
+  ---------
+
+- A variável maior não foi inicializada. Logo
+  não podemos prever o que vai acontecer na
+  comparação "num > maior"
+  
+- A atribuição "num <- maior" está errada;
+  quem deve ser atualizada é a variável maior
+  (i.e., "maior <- num")
+
+
+Solução 2 (com erro)
+  ---------
+  n <- ler um número
+  cont <- 1
+  maior <- 0
+  
+  enquanto (cont <= n)
+      num <- ler
+      cont <- 1 + cont
+      se (num > maior)
+          maior <- num
+	  
+  imprimir maior
+  ---------
+
+- Resolve o problema de falta de inicialização
+  da variável maior, mas a resposta será errada
+  nos casos em que o maior número da sequência
+  for negativo.
+
+
+Solução 3 (correta)
+  ---------
+  n <- ler um número
+  maior <- ler um número
+  
+  cont <- 1
+  enquanto (cont < n)
+      num <- ler
+      cont <- cont + 1
+      se (num > maior)
+          maior <- num
+	  
+  imprimir maior
+  ---------
+
+- Para resolver o problema de inicialização
+  da variável maior, a solução mais simples é
+  aceitar que até vermos o segundo número da
+  sequência, o maior é o primeiro número da
+  sequência. A partir disso, no laço simplesmente
+  lemos o próximo número e verificamos se o
+  número que acabamos de ler é maior que o
+  maior encontrado até o momento.
+
+
+Solução 4 (com instruções desnecessárias)
+  ---------
+  n <- ler um número
+  maior <- ler um número
+  
+  cont <- 1
+  enquanto (cont < n)
+      num <- ler
+      cont <- cont + 1
+      se (num > maior)
+          maior <- num
+      senão
+          maior = maior
+  imprimir maior
+  ---------
+
+- O "senão maior = maior" é totalmente
+  dispensável. Portanto não deveria estar ali.
+
+
+Solução 5 (comparações sabidamente desnecessárias)
+  ---------
+  cont = 0;
+  printf("Digite n:");
+  scanf("%d", &n);
+  
+  while (cont != n) {
+      printf("Digite o numero:");
+      scanf("%d", &numero);
+      if (cont == 0) {
+          maior_numero = numero;
+      }
+      else {
+          if (numero > maior_numero) {
+              maior_numero = numero;
+          }
+      }
+      cont = cont + 1 ;
+    }
+  ---------
+
+- O programa irá calcular a resposta correta,
+  porém a verificação "if (cont == 0)", que será
+  verdadeira sabidamente apenas na primeira iteração,
+  será repetida nas n iterações do laço
+  (desnecessariamente).
+  
+- Para evitar isso, a solução natural é
+  tratar o primeiro número antes do laço, como
+  foi feito na solução 3 acima.
+
+
+=================
+Problema 10: Dado um inteiro positivo, calcular a soma
+de seus dígitos.
+
+- Para a solução deste problema, as seguintes operações
+  serão úteis.
+
+    /  divisão (quando calculado entre 2 inteiros,
+       devolve a parte inteira da divisão)
+
+    %  resto da divisão; pode ser usado entre 2
+       inteiros
+
+    Exemplo:
+       5 / 2 é igual a 2  (o .5 de 2.5 é desprezado)
+       5 % 2 é igual a 1  (resto da divisão de 5 por 2)

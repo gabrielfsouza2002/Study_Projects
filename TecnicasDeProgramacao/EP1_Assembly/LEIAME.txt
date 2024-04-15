@@ -1,0 +1,32 @@
+AUTOR:
+Gabriel Ferreira de Souza Araujo, nusp: 127018100, email: gabrielfsouza.araujo@usp.br
+
+DESCRIÇÃO:
+Os programas leem uma entrada que contém um comando caso queira descobrir o proximo número primo de um número N ou queira descobrir os multiplos primos do produto N. Podemos também comparar a eficiência e o tamanho de cada programa.
+
+COMO COMPILAR:
+Programa em C -> gcc -Wall fonte.c
+Programa em Assembly -> nasm -f elf64 fonte.s -o fonte.o
+		     ->ld -o fonte fonte.o
+
+COMO EXECUTAR:
+O programa irá fazer a leitura de dois numeros na mesma linha. o primeiro número é um comando (0 se quero achar o próximo primo de um numero N ou 1 se quero achar os multiplos primos do produto N) e o segundo é um numero N. A saída será correspondente ao comando solicitado. EX: 0(comando) 7(N) -> 11 (próximo primo). EX: 1 15 -> 3(mult1) 5(mult2). Se o comando for 1 e não existir multiplos primos, o programa não produz uma saída.
+
+TESTES:
+0 10000000 <--- digitado
+10000019   <--- saída
+
+0 610666660 <--- digitado
+610666687   <--- saída
+
+1 908118221 <--- digitado
+30133 30137 <--- saída
+
+1 6 <--- digitado
+2 3 <--- saída
+
+1 908118222 <--- digitado
+1 2         <--- saída
+
+DEPENDÊNCIAS:
+Os programas deverão ser executados no linux . Para executar o programa em C, devemos instalar o GCC com o comando sudo apt install gcc. Para executar o programa em assembly é necessário instalar nasm com o comando sudo apt-get install nasm. Para compilar o programa em assembly, é necessário instalaro gdb com o comando sudo apt-get install gdb.

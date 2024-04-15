@@ -1,0 +1,160 @@
+Resumo da aula 13 (09/05/2022)
+
+
+Exercícios envolvendo funções e apontadores
+
+=========================
+Problema 29: Neste exercício vamos supor que o usuário
+irá digitar números inteiros usando apenas os dígitos 0 e 1,
+e vamos interpretá-los como binários.
+
+a) Escrever uma função com protótipo
+
+   void somabit (int b1, int b2, int *vaium, int *s);
+
+que recebe três bits (inteiros entre 0 e 1) b1, b2 e *vaium
+e devolve um bit *s representando a soma dos três e o novo
+bit "vai-um" em *vaium.
+
+(b) Escreva um programa que lê dois números em binário e calcula,
+usando a função do item (a), um número em binário que é a soma
+dos dois números dados.
+
+Exemplo:
+   Primeiro número: 1001
+   Segundo número: 101
+   Soma: 1110
+
+
+#include <stdio.h>
+
+/* b1, b2 e *vaium são os bits a serem somados
+   *vaium e *s serão atualizados conform a adição
+   Note que *s será um somente se a soma dos três
+   bits resultar em valor ímpar (ou 1 ou 3) e que
+   há um novo vaium somente se a soma dos três bits
+   for >= 2
+*/
+   
+void somabit (int b1, int b2, int *vaium, int *s)
+{
+  *soma  = (b1 + b2 + *vaium) % 2;
+  *vaium = (b1 + b2 + *vaium) / 2;
+}
+
+
+int main()
+{
+  int m, n, qm, qn, vaium, dig, resp, pot;
+
+  printf("Digite m e n: ");
+  scanf("%d %d", &m, &n); 
+
+  vaium = 0; 
+  resp  = 0;  /* para armazenar a soma em binário */ 
+  pot = 1;    /* para "construir" a soma em binário */ 
+  qm = m;     /* para preservar o m original */
+  qn = n;     /* para preservar o n original */
+
+  while (qm!=0 || qn!=0) {
+    somabit(qm%10, qn%10, &vaium, &dig);
+    qm = qm/10;
+    qn = qn/10;
+    resp = resp + dig*pot;
+    pot = pot * 10;
+  }
+
+  resp = resp + vaium*pot ;
+  printf("%d + %d = %d \n", m, n, resp);
+  return 0 ;
+}
+
+
+
+=========================
+Problema 30: Escreva uma função com protótipo
+
+    int divide (int *m, int *n, int d); 
+
+que recebe três inteiros positivos como parâmetros e
+retorna 1 se d divide pelo menos um entre *m e *n, e
+devolve 0 em caso contrário. Além disso, se d divide
+*m, a função deve dividir *m por d. Deve fazer o mesmo
+para para *n também.
+
+Escreva um programa que lê dois inteiros positivos m e n
+e calcula, usando a função acima, o mínimo múltiplo comum entre m e n.
+
+Solução
+
+#include <stdio.h>
+
+int divide (int *m, int*n, int d)
+{
+  int resp;
+
+  if (*m % d == 0 || *n % d == 0)
+    resp = 1;
+  else
+    resp = 0;
+
+  if (*m % d == 0)
+    *m = *m/d;
+  if (*n % d == 0)
+    *n = *n/d;
+
+  return(resp);
+}
+
+int main()
+{
+  int m, n, qm, qn, d, mmc;
+
+  printf("Digite m e n: ");
+  scanf("%d %d", &m, &n);
+  
+  d = 2;
+  mmc = 1;
+  qm = m;
+  qn = n;
+  while (qm != 1 || qn != 1) {
+    if (divide(&qm, &qn, d))
+      mmc = mmc * d;
+    else
+      d = d + 1;
+  }
+
+  printf("mmc(%d, %d) = %d \n", m, n, mmc);
+  return 0 ;
+}
+
+
+
+===========================================
+
+Nos dois exercícios acima, há parâmetros na
+função que são apontadores (*paramater_name) e
+outros que não são apontadores.
+
+Sempre que a função precisa alterar o valor de
+uma vraiável definida fora do seu escopo,
+  1) o parâmetro na função deve ser definida como
+     apontador, e
+  2) na chamada da função, deve ser passado
+     para aquele parâmetro o endereço da variável
+     que terá o valor alterado
+
+Veja na função somabit() que o parâmetro vaium
+aparece como apontador (int *vaium), e que quando
+a função é chamada na main(), fazemos
+
+   somabit( .... , .... , &vaium, ... );
+
+O código é feito desta forma pois a função somabit()
+não só precisa do valor vaium atual, mas precisa
+também calcular o novo vaium e passar isso para a
+função main(). Em vez de passar o valor via return para
+a main(), usando o apontador a função somabit() consegue
+alterar o valor da variável vaium que está no escopo
+da main() -- e portanto fora do escopo da somabit().
+

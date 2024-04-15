@@ -1,0 +1,257 @@
+Resumo da Aula 21 (06/06/2022)
+------------------------------
+
+Matrizes (arrays bidimensionais)
+
+Matrizes são estruturas indexadas, com duas dimensões:
+linhas e colunas. Desta forma, os elementos de uma
+matriz podem ser acessados usando-se um índice i que
+indica uma linha e outro índice j que indica uma coluna.
+
+No caso da linguagem C, por enquanto vamos fazer a
+declaração de matrizes de forma similar a vetores.
+Se queremos declarar uma matriz inteira com espaço
+para armazenar matrizes com até MAX linhas e com
+até MAX colunas, fazemos da seguinte forma:
+
+      int   M[MAX][MAX] ;
+
+Os índices variam de 0 a MAX-1, tanto na linha
+como na coluna.
+
+Um elemento específico, na posição (i,j) da matriz
+é denotada
+
+      M[i][j]
+
+Deve-se tomar cuidado para garantir que esses
+índices  i  e  j  estarão sempre no intervalo válido.
+
+A matriz não necessariamente precisa ser quadrada,
+isto é, podemos declarar algo como
+
+      int  M[20][100] ;
+
+Podemos também ter matrizes que armazenam dados de
+outro tipo. Por exemplo:
+      double  X[MAX][MAX] ;
+      char    C[MAX][MAX] ;
+
+
+Da mesma forma que em vetores, as posições nas
+matrizes precisam ser "visitados" um a um.
+Por exemplo, não existe uma forma mágica de
+preencher todas as posições da matriz simultaneamente
+(a não ser que você esteja usando um processador
+paralelo).
+
+Como seria a leitura de uma matriz? Supondo que
+o usuário irá digitar os elementos da
+matriz linha a linha, como no exemplo a
+seguir com m=3 linhas e n=4 colunas:
+
+      0  9  6  1
+     -2  4  0  0
+      5  4  3  1
+
+podemos considerar a seguinte função para a leitura
+de matriz:
+
+  void le_mat(int m, int n, int M[MAX][MAX]) {
+    int i, j ;
+ 
+    for (i=0; i<m; i++)
+      for (j=0; j<n; j++)
+        scanf("%d", &M[i][j]) ;
+  }
+
+Como pode ser visto, os elementos precisam ser
+lidos um a um e armazenados na posição correta
+na matriz. "&M[i][j]" indica o endereço
+ocupado pela posição (i,j) da matriz
+na memória do computador.
+
+Note que, se a matriz é de tamanho m=3 e n=4 e
+MAX é igual a 100, por exemplo, muitas posições
+ficarão ociosas. Mas, desde que esse espaço
+ocioso não seja muito grande, não precisamos nos
+precoupar. Nesta disciplina certamente não nos
+preocuparemos com isso. Também iremos supor que
+as matrizes que processamos sempre cabem
+num espaço MAX x MAX.
+
+Para imprimir um matriz, já preenchida, podemos
+usar a seguinte função:
+
+  void imp_mat(int m, int n, int M[MAX][MAX]) {
+    int i, j ;
+ 
+    for (i=0; i<m; i++) {
+      for (j=0; j<n; j++)
+        printf("%d ", M[i][j]) ;
+      printf("\n") ;
+    }
+  }
+
+Note que um espaço em branco em "%d " é importante
+para separar os elementos na impressão. Também
+um "\n" ao final da impressão de cada linha é
+importante para separar as linhas.
+Pode-se adicionalmente definir de forma precisa
+o número de casas (espaços) utilizados na impressão
+de cada elemento para que a impressão final
+fique com "cara de matriz", com elementos de uma
+mesma coluna alinhados. (consulte o manual pois a
+profa. não lembra como fazer isso ...)
+
+
+Exemplo de inicialização de uma matriz "na raça":
+
+  int main() {
+
+    int M[2][3] ;
+
+    M[0][0] = 0 ;
+    M[0][1] = 1 ;
+    M[0][2] = 2 ;
+    M[1][0] = 3 ;
+    M[1][1] = 4 ;
+    M[1][2] = 5 ;
+
+    /* conferir de inicializou corretamente e se a
+       função imp_mat() funciona :-)  */
+       
+    imp_mat(2, 3, M) ;
+    
+    return 0 ;
+  }
+
+Q: O que acontece se eu acrescentar uma linha
+     M[2][0] = 0 ;  ?
+   E se eu acrescentar:
+     int i ;
+     ...
+     i = 2 ;
+     M[i][0] = 0 ;
+
+=========================
+Problema 40: 
+Dado um inteiro positivo n e uma matriz inteira A de dimensão
+n x n, verificar se A é simétrica.
+
+  #define MAX 100
+
+  /* função de leitura, a que está acima */
+  void le_mat(int m, int n, int M[MAX][MAX]) ;
+  
+  int main() {
+    int n, M[MAX][MAX], eh_simetrica ;
+
+    printf("Digite n: ");
+    scanf("%d", &n) ;
+
+    print("Digite a matriz\n");
+    le_matriz(n, n, M) ;
+
+    eh_simetrica = 1 ;  /* simetrica enquanto não se prova o contrário */
+    
+    for(i=0; i<n-1 && eh_simetrica; i++) {
+      for(j=i+1; j<n && eh_simetrica; j++) {
+        if(M[i][j] != M[j][i])
+	  eh_simetrica = 0 ;
+      }
+    }
+    
+    if (eh_simetrica) {
+      printf("A matriz é simétrica\n") ;
+    }
+    else {
+      printf("A matriz não é simétrica\n") ;
+    }
+    return 0 ;
+  }
+
+Uma matriz é simétrica se sua transposta é igual a ela mesma.
+A solução acima compara os elementos do triângulo superior
+com os correspondentes no triângulo inferior.
+As iterações são interrompidas assim que encontramos
+uma posição (i,j) tal que M[i][j] != M[j][i]
+
+=========================
+PROBLEMA 41: Dados inteiros positivos m, n e p, e duas matrizes
+inteiras A (dimensão m x n) e B (dimensão n x p), calcular a
+matriz C (dimensão m x p) que é o produto de A por B.
+
+  #define MAX 100
+
+  /* função de leitura e impressão, as que estão acima */
+  void le_mat(int m, int n, int M[MAX][MAX]) ;
+  void imp_mat(int m, int n, int M[MAX][MAX]) ;
+  
+  int main() {
+    int m, n, p, i, j, k;
+    int A[MAX][MAX], B[MAX][MAX], C[MAX][MAX] ;
+
+    printf("Digite m, n e p: ");
+    scanf("%d %d %d", &m, &n, &p) ;
+
+    print("Digite a matriz A\n");
+    le_matriz(m, n, A) ;
+
+    print("Digite a matriz B\n");
+    le_matriz(n, p, B) ;
+    
+    /* Vamos preencher a matriz C */
+    for(i=0; i<m; i++) {
+      for(j=0; j<p; j++) {
+        C[i][j] = 0 ;
+	/* para calcular C[i][j] precisamo multiplicar
+	   a linha i da matriz A com a coluna j da matriz B */
+	for(k=0; k<n; k++) {
+          C[i][j] = C[i][j] + A[i][k]*B[k][j] ;
+	}
+      }
+    }
+
+    printf("Matriz produto AxB\n") ;
+    imp_mat(m, p, C) ;
+    
+    return 0 ;
+  }
+
+=================================================
+
+Quando declaramos uma matriz
+
+    int   M[MAX][MAX] ;
+
+M é um ponteiro, que aponta para a posição
+de memória ocupada pelo elemento M[0][0].
+Na memória, os elementos são armazenados
+sequencialmente, linha após linha:
+
+     M[0][0]
+     M[0][1]
+     ...
+     M[0][MAX-1]
+     M[1][0]
+     M[1][1]
+     ...
+     M[1][MAX-1]
+     .
+     .
+     .
+     M[MAX-1][0]
+     M[MAX-1][1]
+     ...
+     M[MAX-1][MAX-1]
+     
+M[i] também é um ponteiro (aponta para a
+posição ocupada pelo primeiro elemento da
+linha i). De certa forma, podemos pensar que
+M[i] é um vetor.
+
+Já as colunas não podem ser pensadas como
+vetores. Por que ?
+
+=========================================

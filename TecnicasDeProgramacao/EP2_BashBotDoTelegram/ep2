@@ -1,0 +1,60 @@
+#!/bin/bash
+
+cont_intervalo=0
+aux_ociosidade=0
+tempo_fora_do_ar=0
+
+while [ 1 ]; do
+	data=$(date +%x)
+	hora=$(date +%T)
+	IPs=$(netstat -anp 2>/dev/null | grep -e 45052 | grep ESTABELECIDA | cut -f 2 -d ':' | grep 45052 | tr ' ' "." | cut -f 10,11,12,13 -d '.')
+	Ociosidade=$(top -n 1 | grep %Cpu | cut -f 7,8 -d ',' | cut -f 2 -d ' ' | tr ',' ".")
+	if [ "$(netstat | grep -m 1 45052 | tr 'A' " " | cut -f 45 -d ' ' )" == "BELECID" ]; then #Se a conexão com 45052 está estabelecida no netstat, então o servidor está ligado.
+		EstadoServidor="Ligado"
+	else
+		EstadoServidor="Desligado"
+		let tempo_fora_do_ar=tempo_fora_do_ar+1
+	fi
+	
+	if [ "$( echo "$Ociosidade<$3" | bc -l 2> /dev/null )" == 1 ]; then #Enviamos possiveis erros para o /dev/null
+	
+		aux_ociosidade=$( echo "$aux_ociosidade+$Ociosidade" | bc -l )
+		let cont_intervalo=cont_intervalo+1
+		#Impressões na tela
+		echo -e "\n"
+		echo Data: $data Hora: $hora
+		echo -e IPs conectados: "\n$IPs"
+		echo Ociosidade CPU: $Ociosidade%
+		echo Estado do Servidor: $EstadoServidor
+		echo -e "\n" >> $2
+	
+		#Impressões no arquivo
+		echo Data: $data Hora: $hora >> $2
+		echo -e IPs conectados: "\n$IPs">> $2
+		echo Ociosidade CPU: $Ociosidade% >> $2
+		echo Estado do Servidor: $EstadoServidor >> $2
+		if [ $cont_intervalo == 100 ];then
+			echo Média das 100 últimas mediações de ociosidade: $( echo "$aux_ociosidade/$cont_intervalo" | bc -l )% >> $2
+			echo Tempo que o servidor ficou fora do ar dentro dos 100 intervalos de tempo: $tempo_fora_do_ar s >> $2
+			aux_ociosidade=0
+			cont_intervalo=0
+			tempo_fora_do_ar=0	
+		fi
+		
+		#Enviando para o bot
+		curl -s --data "text=############################
+			
+		Data: $data   Hora: $hora
+						
+		IPs conectados:
+		$IPs
+						
+		Ociosidade CPU: $Ociosidade%
+		
+		Estado do Servidor: $EstadoServidor" https://api.telegram.org/bot$4/sendMessage?chat_id=$5 1>/dev/null	 #A cada iteração o bot envia em apenas uma menssagem todas as informções requeridas.		
+	fi
+	
+	sleep $1
+	
+done
+exit 0

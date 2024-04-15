@@ -1,0 +1,252 @@
+Resumo da Aula 23 (20/06/2022)
+------------------------------
+
+
+Alocação dinâmica de memória
+----------------------------
+
+   Variáveis declaradas localmente em uma função
+   são automaticamente alocadas antes da execução
+   da função, mesmo que alguma das variáveis nem
+   venham a ser utilizadas durante a execução da
+   função. Assim que a execução da função é encerrada,
+   o espaço de memória utilizada por essas variáveis
+   locais é automaticamente liberada.
+
+   Há situações em que não convém reservar espaço
+   de memória, ainda mais se nem sabemos se tal espaço
+   é necessário. Nessas situações, a alocação dinâmica
+   é interessante. Alocação dinâmica refere-se à
+   alocação de memória que é feita durante a execução
+   do programa. Por exemplo, naqueles problemas de
+   leitura de sequências, podemos primeiramente obter
+   a informação sobre o tamanho da sequência e somente
+   após isso alocar o espaço necessário.
+   
+
+   Usamos a função malloc() para alocar e free() para liberar
+   memória alocada dinamicamente.
+   As duas funções estão na biblioteca
+
+       #include <stdlib.h>
+
+       void *malloc(size_t size);
+       void free(void *ptr);
+
+   O parâmetro em malloc() é o número de bytes que queremos alocar
+
+
+Alocação de vetores (um programa completo)
+-------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+   int *V; 
+   int i, n;
+
+   printf("Digite o tamanho da sequência: ") ;
+   scanf ("%d", &n);
+   
+   V = malloc (n * sizeof (int));
+   if (V==NULL) {
+      printf("Erro na alocação de memória\n") ;
+      return 0 ;
+   }
+      
+   printf("Digite a sequência\n") ;
+   for (i = 0; i < n; i++) { 
+      scanf ("%d", &V[i]);
+   }
+
+   /* print the sequence in reverse order */
+   for(i=n-1; i>=0; i--) {
+       printf ("%d ", V[i]);
+   }
+   printf("\n") ;
+   
+   free (V); V=NULL;
+   return 0;
+}
+
+A função malloc (memory allocation) aloca
+no caso acima n*sizeof(int) bytes.
+Note que para o programador não importa muito
+a quantos bytes corresponde um int.
+A certeza que se pode ter é que, se a alocação
+não resultou em erro, então foi alocado espaço
+para armazenar exatamente n inteiros.
+
+
+Alocação de matrizes mxn
+------------------------
+
+a) No caso de matrizes, pode-se considerar ponteiros
+para ponteiros.
+
+   int **M;
+   
+   M = malloc (m * sizeof (int *));
+   for (int i = 0; i < m; ++i)
+      M[i] = malloc (n * sizeof (int));
+
+   M[i][j] é o elemento de M que está no cruzamento da linha i com a coluna j
+
+No código acima, M recebe o endereço para um
+espaço que comporta m ponteiros.
+Em seguida, cada M[i] recebe o endereço para um
+vetor de tamanho n (que servirá para armazenar os
+elementos da linha i da matriz, denotado M[i]).
+
+Para liberar a memória alocada, precisamos liberar
+os vetores linha a linha e em seguida o vetor M
+com os ponteiros para as linhas.
+
+   for (int i = 0; i < m; ++i)
+      free(M[i]) ;
+   free(M) ;
+  
+
+b) Alternativamente, uma forma mais simples é armazenar
+a matriz em um vetor, considerando-se o percorrimento
+linha a linha da matriz e mapear o índice (i,j) de
+um ponto da matriz para a posição correspondente no
+vetor como mostrado abaixo.
+
+   int *M ;
+
+   /* alocar espaço para armazenar m*n inteiros */
+   M = malloc(sizeof(int)*m*n);
+   
+   M[i*n + j] = 1 ;  /* M[i][j]=1; supondo coluna com n elementos */
+
+   ...
+   free(M) ;
+
+
+OBS:
+----
+0) Alocação dinâmica é diferente de alocação feita
+   declarando-se uma variável local na forma
+
+     int M[MAX][MAX] ;
+
+1) A alocação local ocupa espaço na pilha de execução.
+   A quantidade de memória que pode ser usada pelas variáveis
+   declaradas localmente é limitada pelo tamanho
+   disponível na pilha de execução.
+   Na prática, um programa com, por exemplo, declaração
+   de três matrizes 512x512, como acima, não roda por
+   conta dessa limitação da pilha de execução
+   (experimente para confirmar!)
+   
+2) A memória alocada dinamicamente dentro de uma função
+   não é liberada quando a execução da função termina, diferentemente
+   das variáveis declaradas localmenre.
+   Memória alocada dinamicamente só é liberada com o comando free().
+   É importante liberar memórias que foram alocadas dinamicamente
+   assim que elas não são mais necessárias, para não
+   comprometer a quantidade de espaço disponível (para
+   outros processos também)
+
+3) Se ptr é a variável que contém o endereço da memória
+   alocada dinamicamente, após cada free(ptr) convém atribuir
+   NULL a ptr  ( ptr=NULL; )
+
+4) Existem variantes da malloc() como calloc() e realloc()
+   Possivelmente vocês terão a chance de ver isso mais adiante;
+   ou as mesmas podems ser consultadas no manual de C
+
+
+
+EXTRA: Argumentos na linha de comando
+-------------------------------------
+(isso não foi falado em sala de aula)
+
+
+   int main (int numargs, char *arg[]) {
+      ...
+   }
+
+numargs é o número de argumentos, incluindo o nome do programa.
+arg[0], arg[1], ..., arg[numargs-1] são strings, os argumentos
+da chamada, sendo arg[0] o nome do programa.
+
+Cabe ao programa fazer o "parsing" dos parâmetros.
+
+
+Exemplo
+-------
+
+O que é  char *arg[] ?
+
+É um array de ponteiros para char.  Isto é cada
+elemento arg[i] é uma ponteiro para char; logo pode
+estar apontando para uma string
+
+Veja explicação baseada em
+https://stackoverflow.com/questions/12602413/difference-between-int-x-and-int-x
+
+Quando escrevemos
+
+    int *x[3]; 
+
+A variável x é um array com 3 ponteiros para int
+
+Quando escrevemos
+
+    int (*x)[3];
+
+A variável x é um ponteiro para um array de 3 inteiros.
+(é um tanto confuso, mas são as "baixarias" da programação).
+  
+
+Concretamente, podemos fazer algo como:
+
+   int *arrayOfPointers[3];
+   int x, y, z;
+
+   arrayOfPointers[0] = &x;
+   arrayOfPointers[1] = &y;
+   arrayOfPointers[2] = &z;
+
+
+   int (*pointerToArray)[3];
+   int array[3];
+
+   pointerToArray = &array;
+
+===========================================================
+Problema 46: Escreva uma funcao que recebe uma matriz
+     A de inteiros, inteiros positivos m e n (as dimensões
+     da matriz A), e devolve (via parâmetro) uma matriz
+     de dimensão (m+2)x(n+2) que na parte central é uma
+     cópia de A e nas bordas contém o valor 0.
+
+void adiciona_borda(int A[MAX][MAX], int m, int n, int B[MAX][MAX]) {
+   int i, j ;
+
+   for(i=0; i<m; i++) {
+      for(j=0;j>n; j++) {
+         B[i+1][j+1] = A[i][j] ;
+      }
+      B[i+1][0] = 0 ;
+      B[i+1][n+1] = 0 ;
+   }
+   for(j=0; j<n+2; j++) {
+      B[0][j] = 0 ;
+      B[m+1][j] = 0 ;
+   }
+}
+
+
+=====================
+Problema 47: Escreva um programa que le dois inteiros
+     positivos, m e n, e uma matriz A de dimensoes
+     m x n contendo zeros (posicoes livres) e
+     -1s (posicoes com minas). O seu programa deve
+     preencher cada posição livre da matriz com o número
+     de minas nas casas vizinhas.
+   
+

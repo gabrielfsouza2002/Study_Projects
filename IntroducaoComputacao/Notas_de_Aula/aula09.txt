@@ -1,0 +1,194 @@
+Resumo da aula 09 (25/04)
+-------------------------
+
+Revisão do que vimos até aqui
+
+1) declaração de variáveis
+   tipo int
+       - pode ser usado para armazenar um número inteiro
+       - pode ser interpretado como variável lógica
+         (em C, valor 0 é FALSO e valor != 0 é VERDADEIRO)
+	 
+2) atribuição de valor a uma variável
+       a = 0  é atribuição (não confundir: igualdade é ==)
+       
+3) Operações aritméticas
+      +  adição
+      -  subtração
+      -  negação   (-x)
+      *  multiplicação
+      /  divisão (cuidado com a divisão por 0)
+      %  resto da divisão (só para inteiros)
+
+4) Operações relacionais
+      ==
+      !=
+      >
+      >=
+      <
+      <=
+
+5) Operações lógicas
+      &&    E lógico
+      ||    OU lógico
+      !     NÃO lógico
+
+6) Expressões
+      Variáveis, números, operações aritméticas,
+      operações relacionais e operações lógicas
+      podem ser usadas para escrever uma expressão.
+
+      Expressões tomam valor numérico se envolve
+      números e operações aritméticas
+
+      Expressões tomam valor lógico (VERDADEIRO ou
+      FALSO) se envolvem operações relacionais e/ou
+      lógicas
+
+7) Comando de seleção
+      se / senão
+      se
+      
+8) Comando de repetição
+      while
+      do-while
+      for
+
+9) Comandos de I/O (input/output)
+      scanf
+      printf
+
+
+--------------------------------------
+
+float - tipo de dados para armazenamento de números
+        reais
+
+float usa 4 bytes
+double usa 8 bytes
+
+Em todo caso, para a representação de números reais em
+computador utiliza-se a notação científica. Vejamos:
+
+      0.159 = 0.159x10^{0}
+       15.9 = 0.159x10^{2}
+    0.00159 = 0.159x10^{-2}
+        159 = 0.159x10^{3}
+
+Todos os 4 números acima possuem os dígitos 159 em comum.
+O expoente no 10 é que faz eles serem números distintos
+uns dos outros. Essa notação científica dá uma dica de
+como podemos representar números reais no computador:
+
+     1 bit para o sinal
+     x bits para a mantissa (no exemplo acima o 159)
+     32-x-1 bits para o expoente
+
+O exemplo acima está em base 10, mas no computador
+usa-se a base 2 (binária).
+
+Veja mais detalhes, por exemplo, em
+https://en.wikipedia.org/wiki/IEEE_754
+IEEE-754 é um padrão usado comumente.
+
+O nome float relaciona-se com o fato do ponto ( . )
+flutuar para a esquerda ou direita, na notação acima.
+
+
+float em C
+----------
+Para declarar uma variável do tipo real, basta escrever:
+
+    float x ;
+
+Não é muito diferente do que já fazemos com inteiros:
+
+    int  n ;
+
+Para leitura/escrita, no lugar de "%d" que usamos com os
+inteiros, para floats usamos "%f". Assim,
+
+    scanf("%f", &x) ;
+
+para ler um número real. E deve-se usar . para indicar
+as casas decimais (não a vírgula).
+
+
+-----------------------------
+Problema 21: Dado um inteiro positivo n, calcular e imprimir
+o valor da seguinte fórmula:
+
+    1     2     3          n-1    n
+   --- + --- + --- + ... + --- + ---
+    n    n-1   n-2          2     1
+
+int main() {
+   int n, i ;
+   float soma ;
+
+   scanf("%d", &n) ;
+   soma = n ;
+   i = 1 ;
+   while (i < n) {
+       soma = soma + (float)i/(n-i+1) ;
+       i++ ;
+   }
+   printf("A soma é %f\n", soma) ;
+   return 0 ;
+}
+
+Note que como "i" e "n-i+1" são inteiros, se calcularmos
+"i/(n-i+1)", o seu valor será um inteiro (a parte decimal da
+divisão será desprezada). Para que o resultado seja um
+número real, devemos forçar que ao menos um dos operandos 
+seja tratado como um número real. Por conta disso escrevemos
+"(float)i/(n-i+1)" -- isso significa que antes de calcular
+a divisão, o valor de "i" é convertido de inteiro para real,
+e em seguida é realizada a divisão de números reais
+(que resulta um número real). Note que a variável "i" e
+seu valor continuam sendo inteiros, intactos.
+
+-----------------------------
+Problema 22: Os pontos (x,y) pertencem a H se são tais que x>=0,
+y>=0 e x^2 + y^2 <= 1. Dado um inteiro positivo n e n pontos
+reais (x,y), verifique quantos desses pontos pertencem a H. 
+
+int main( ) {
+   int n, cont ;
+   float x, y ;
+
+   cont = 0 ;
+   scanf("%d", &n) ;
+   while (n > 0) {
+      scanf("%f %f", &x, &y) ;
+      if ((x>=0) && (y>=0) && (x*x + y*y <= 1))
+         cont++ ;
+      n-- ;
+   }
+   printf("O número de pontos em H é %d\n", cont) ;
+   return 0 ;
+}
+
+
+Esse é um exemplo bem bobo, mas é só para ilustrar
+a declaração de variáveis do tipo float.
+
+
+-----------------------------
+Problema 23: Calcule a soma
+
+          1     1     1           1       1
+     1 - --- + --- - --- + ... + ---- - -----
+          2     3     4          9999   10000
+
+pelas seguintes maneiras:
+
+ a) adição dos termos da direita para a esquerda;
+ b) adição dos termos da esquerda para a direita;
+ c) adição separada dos termos positivos e dos termos
+    negativos da esquerda para a direita;
+ d) adição separada dos termos positivos e dos termos
+    negativos da direita para a esquerda.
+
+Compare e discuta os resultados obtidos no computador.
+
